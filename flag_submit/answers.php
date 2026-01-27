@@ -23,7 +23,7 @@ $correct_answers = array(
 	array( "Flag_8", "Flag-GitCommit999", 120 ),
 	array( "Flag_9", "Flag-CookieBrute9", 120 ),
 	array( "Flag_A", "Flag-NO-NTLM", 130 ),
-	array( "Flag_B", "Flag-EasyPop", 150 ),
+	array( "Flag_B", "Flag-EasyPop", 150 ),CTF{CVE-2026-24061-R00T-SHELL}
 	array( "Flag_C", "Flag-RogerYoung", 70 ),
 	array( "Flag_D", "FLAg-ModCgiShell", 300 ),
 	array( "Flag_E", "FLAG-Tunn3l", 125 ),
@@ -121,6 +121,8 @@ $correct_answers = array(
 	array( "EasterEgg11", "flag-3ggHUnt3r2024", 75 ),
 	array( "EasterEgg12", "Flag-IAmARobot", 50 ),
 	array( "EasterEgg13", "Flag-gNagk5M3LZBg", 75 ),
+	array( "EasterEgg13", "CTF{CVE-2026-24061-R00T-SHELL}", 250),
+	
 
 	
 
