@@ -1,0 +1,60 @@
+<%- include('partials/header') %>
+
+    <div class="container" style="max-width: 400px;">
+        <div class="card">
+            <h2 class="text-center">Login</h2>
+
+            <% if (error) { %>
+                <div class="alert text-center">
+                    <%= error %>
+                </div>
+                <% } %>
+
+                    <form action="/login" method="POST">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" required autofocus>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <div class="form-group text-right">
+                            <a href="#" onclick="showHelpModal(event)"
+                                style="color: var(--accent-color); font-size: 0.9em;">Forgot Password?</a>
+                        </div>
+                        <button type="submit" style="width: 100%;">Sign In</button>
+                    </form>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="card glow-card" style="max-width: 400px; width: 90%; position: relative;">
+            <button onclick="closeHelpModal()"
+                style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #fff; font-size: 1.5em; cursor: pointer;">&times;</button>
+            <h3 style="color: var(--accent-color); margin-bottom: 1rem;">Login Help</h3>
+            <div style="color: #ccc; line-height: 1.6;">
+                <p>All old user accounts have a password of <strong style="color: #fff;">student</strong>. please change
+                    it immediately after logging in.</p>
+                <p style="margin-top: 1rem;">Log in with your scoreboard username.</p>
+                <p style="margin-top: 1rem;">If you forgot your password <em>after</em> changing it, please find a
+                    teacher to reset it for you.</p>
+            </div>
+            <button onclick="closeHelpModal()" style="width: 100%; margin-top: 1.5rem; background: #333;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function showHelpModal(e) {
+            e.preventDefault();
+            document.getElementById('helpModal').style.display = 'flex';
+        }
+
+        function closeHelpModal() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
+    </script>
+
+    <%- include('partials/footer') %>

@@ -1,0 +1,173 @@
+<%- include('partials/header') %>
+
+    <style>
+        .chart-container {
+            position: relative;
+            height: 60vh;
+            width: 100%;
+            background: #111;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .controls {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-filter {
+            background: #222;
+            border: 1px solid #444;
+            color: #ccc;
+            padding: 5px 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 4px;
+        }
+
+        .btn-filter.active,
+        .btn-filter:hover {
+            background: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+        }
+    </style>
+
+    <div class="card glow-card" style="border-color: var(--accent-color);">
+        <h2><span class="icon">📈</span> Global Performance Analytics</h2>
+
+        <div class="controls">
+            <button class="btn-filter" onclick="setTimeRange(0.016666)">Last Minute</button>
+            <button class="btn-filter" onclick="setTimeRange(0.083333)">Last 5 Minutes</button>
+            <button class="btn-filter" onclick="setTimeRange(24)">Last 24 Hours</button>
+            <button class="btn-filter" onclick="setTimeRange(168)">Last 7 Days</button>
+            <button class="btn-filter" onclick="setTimeRange(336)">Last 14 Days</button>
+            <button class="btn-filter active" onclick="setTimeRange(720)">Last 30 Days</button>
+            <button class="btn-filter" onclick="setTimeRange(0)">All Time</button>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="scoreChart"></canvas>
+        </div>
+
+        <div class="alert mt-2"
+            style="background: rgba(0, 0, 0, 0.5); border: 1px solid #444; color: #888; text-align: center;">
+            <small>Showing Top 20 Operators. Hover over points for details.</small>
+        </div>
+    </div>
+
+    <!-- Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+    <script>
+        let rawData = [];
+        let chartInstance = null;
+
+        async function initChart() {
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+                if (data.datasets) {
+                    rawData = data.datasets;
+                    renderChart(720); // Default 30 days
+                } else {
+                    console.error("Invalid data format", data);
+                }
+            } catch (e) {
+                console.error("Failed to fetch stats", e);
+            }
+        }
+
+        function setTimeRange(hours) {
+            document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderChart(hours);
+        }
+
+        function renderChart(hoursLimit) {
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+
+            // Calculate bound times
+            const now = new Date();
+            let minTime = null;
+            if (hoursLimit > 0) {
+                minTime = new Date(now.getTime() - (hoursLimit * 60 * 60 * 1000));
+            }
+
+            // Filter data
+            const filteredDatasets = rawData.map(ds => {
+                // Filter points
+                const points = ds.data.filter(p => {
+                    if (!minTime) return true;
+                    return new Date(p.x) >= minTime;
+                });
+
+                return {
+                    ...ds,
+                    data: points
+                };
+            }).filter(ds => ds.data.length > 0); // Remove empty if desired, or keep logic consistent
+
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { datasets: filteredDatasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            min: minTime ? minTime.getTime() : undefined,
+                            max: minTime ? now.getTime() : undefined, // Force max to current time for consistent window
+                            time: {
+                                unit: hoursLimit > 0 && hoursLimit < 2 ? 'minute' : (hoursLimit > 0 && hoursLimit <= 24 ? 'hour' : 'day'),
+                                tooltipFormat: 'MMM d, HH:mm:ss',
+                                displayFormats: {
+                                    minute: 'HH:mm:ss',
+                                    hour: 'HH:mm',
+                                    day: 'MMM d'
+                                }
+                            },
+                            grid: { color: '#333' },
+                            ticks: {
+                                color: '#888',
+                                source: 'auto'
+                            },
+                            title: { display: true, text: 'Time', color: '#666' }
+                        },
+                        y: {
+                            grid: { color: '#333' },
+                            ticks: { color: '#888' },
+                            title: { display: true, text: 'Total Score', color: '#666' }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ccc' },
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const point = context.raw;
+                                    const label = context.dataset.label || '';
+                                    return `${label}: ${point.y} pts [${point.reason || 'Update'}]`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initChart);
+    </script>
+
+    <%- include('partials/footer') %>

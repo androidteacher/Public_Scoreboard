@@ -1,0 +1,147 @@
+<%- include('partials/header') %>
+
+    <div class="card glow-card">
+        <h2><span class="icon">🚩</span> Manage Flags <a href="/admin/dashboard" class="btn"
+                style="float:right; font-size: 0.8em;">Back</a></h2>
+
+        <div style="display: flex; gap: 2rem;">
+            <!-- Left: Flag List -->
+            <div
+                style="flex: 1; max-height: 600px; overflow-y: auto; border-right: 1px solid #333; padding-right: 1rem;">
+                <h3>Existing Flags</h3>
+                <button onclick="selectFlag(null)" class="btn"
+                    style="width: 100%; margin-bottom: 1rem; background: var(--success-color); color: #000;">+ Add New
+                    Flag</button>
+                <div id="flagList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Right: Editor -->
+            <div style="flex: 2;">
+                <h3 id="editorTitle">Add / Edit Flag</h3>
+                <form id="flagForm">
+                    <input type="hidden" name="id" id="flagId">
+                    <div class="form-group">
+                        <label>Name (Display Name)</label>
+                        <input type="text" name="name" id="flagName" placeholder="Flag_X" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Value (The Secret string)</label>
+                        <input type="text" name="value" id="flagValue" placeholder="flag{...}" required>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Points</label>
+                            <input type="number" name="points" id="flagPoints" value="100" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Category</label>
+                            <input type="text" name="category" id="flagCategory" placeholder="Web">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button type="submit" style="flex: 2;">Save Flag</button>
+                        <button type="button" onclick="deleteFlag()" id="deleteBtn"
+                            style="flex: 1; background: var(--danger-color); display: none;">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let flags = [];
+
+        function loadFlags() {
+            fetch('/admin/flags/data')
+                .then(res => res.json())
+                .then(data => {
+                    flags = data;
+                    renderList();
+                });
+        }
+
+        function renderList() {
+            const list = document.getElementById('flagList');
+            list.innerHTML = '';
+            flags.forEach(flag => {
+                const div = document.createElement('div');
+                div.style.padding = '10px';
+                div.style.background = '#111';
+                div.style.border = '1px solid #333';
+                div.style.cursor = 'pointer';
+                div.innerHTML = `<b>${flag.name}</b> <span style="float:right; color: #888;">${flag.points}pts</span>`;
+                div.onclick = () => selectFlag(flag);
+                list.appendChild(div);
+            });
+        }
+
+        function selectFlag(flag) {
+            document.getElementById('submissionResult')?.remove(); // Clear prev messages
+
+            if (!flag) {
+                // New Flag Mode
+                document.getElementById('editorTitle').textContent = 'Add New Flag';
+                document.getElementById('flagForm').reset();
+                document.getElementById('flagId').value = '';
+                document.getElementById('deleteBtn').style.display = 'none';
+            } else {
+                // Edit Mode
+                document.getElementById('editorTitle').textContent = 'Edit Flag: ' + flag.name;
+                document.getElementById('flagId').value = flag.id;
+                document.getElementById('flagName').value = flag.name;
+                document.getElementById('flagValue').value = flag.value;
+                document.getElementById('flagPoints').value = flag.points;
+                document.getElementById('flagCategory').value = flag.category;
+                document.getElementById('deleteBtn').style.display = 'block';
+            }
+        }
+
+        document.getElementById('flagForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // If ID is empty, remove it so backend treats as insert (or handle in backend logic)
+            // My admin route likely handles this simply.
+            // Let's check: router.post('/flags', ... INSERT)
+            // Wait, I need an UPDATE route for editing.
+            // Current implementation in admin.js likely only supports POST (Add) and POST (Delete).
+            // I need to update admin.js to support 'edit' or handle it in one route.
+            // I will assume I need to update admin.js next.
+
+            const res = await fetch('/admin/flags/save', { // I'll create this consolidated route
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                loadFlags();
+                selectFlag(null); // Reset to new
+                alert('Saved successfully');
+            } else {
+                alert('Error saving flag');
+            }
+        });
+
+        async function deleteFlag() {
+            const id = document.getElementById('flagId').value;
+            if (!id) return;
+            if (!confirm('Are you sure? This cannot be undone.')) return;
+
+            await fetch('/admin/flags/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            loadFlags();
+            selectFlag(null);
+        }
+
+        loadFlags();
+    </script>
+
+    <%- include('partials/footer') %>

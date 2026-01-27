@@ -1,0 +1,230 @@
+<%- include('partials/header') %>
+
+    <div class="card glow-card">
+        <h2><span class="icon">👥</span> Manage Users <a href="/admin/dashboard" class="btn"
+                style="float:right; font-size: 0.8em;">Back</a></h2>
+
+        <div style="display: flex; gap: 2rem;">
+            <!-- Left: User List -->
+            <div
+                style="flex: 1; max-height: 600px; overflow-y: auto; border-right: 1px solid #333; padding-right: 1rem;">
+                <h3>Users (<span id="userCount">0</span>)</h3>
+                <button onclick="selectUser(null)" class="btn"
+                    style="width: 100%; margin-bottom: 1rem; background: var(--success-color); color: #000;">+ Add New
+                    User</button>
+                <input type="text" id="searchUser" placeholder="Search users..." onkeyup="filterUsers()"
+                    style="margin-bottom: 1rem;">
+                <div id="userList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Right: Editor -->
+            <div style="flex: 2;">
+                <h3 id="editorTitle">User Details</h3>
+                <form id="userForm">
+                    <input type="hidden" name="id" id="userId">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" id="userName" required>
+                    </div>
+
+                    <div class="form-group" id="passGroup">
+                        <label>Set/Reset Password</label>
+                        <input type="text" name="password" id="userPass" placeholder="Leave empty to keep current">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select name="role" id="userRole">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" style="flex: 2;">Save User</button>
+                        <button type="button" onclick="deleteUser()" id="deleteBtn"
+                            style="flex: 1; background: var(--danger-color); display: none;">Delete</button>
+                    </div>
+                </form>
+
+                <div id="bonusSection"
+                    style="display: none; border-top: 1px solid #333; margin-top: 2rem; padding-top: 1rem;">
+                    <h4>Operational Adjustments (Bonus Points)</h4>
+                    <div id="bonusList" style="margin-bottom: 1rem; max-height: 150px; overflow-y: auto;"></div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="number" id="bonusPoints" placeholder="Points (+/-)"
+                            style="flex: 1; padding: 5px; background: #222; border: 1px solid #444; color: #fff;">
+                        <input type="text" id="bonusReason" placeholder="Reason"
+                            style="flex: 2; padding: 5px; background: #222; border: 1px solid #444; color: #fff;">
+                        <button type="button" onclick="addBonus()" class="btn"
+                            style="background: var(--accent-color); color: #000; padding: 5px 15px;">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let users = [];
+
+        function loadUsers() {
+            fetch('/admin/users/data')
+                .then(res => res.json())
+                .then(data => {
+                    users = data;
+                    document.getElementById('userCount').textContent = users.length;
+                    renderList(users);
+                });
+        }
+
+        function filterUsers() {
+            const term = document.getElementById('searchUser').value.toLowerCase();
+            const filtered = users.filter(u => u.username.toLowerCase().includes(term));
+            renderList(filtered);
+        }
+
+        function renderList(listData) {
+            const list = document.getElementById('userList');
+            list.innerHTML = '';
+            listData.forEach(user => {
+                const div = document.createElement('div');
+                div.style.padding = '10px';
+                div.style.background = '#111';
+                div.style.border = '1px solid #333';
+                div.style.cursor = 'pointer';
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+
+                // Highlight admin
+                const roleBadge = user.role === 'admin' ? '<span style="color:var(--accent-color); font-size:0.8em;">ADMIN</span>' : '';
+
+                div.innerHTML = `<span>${user.username}</span> ${roleBadge}`;
+                div.onclick = () => selectUser(user);
+                list.appendChild(div);
+            });
+        }
+
+        async function selectUser(user) {
+            if (!user) {
+                // New User
+                document.getElementById('editorTitle').textContent = 'Add New User';
+                document.getElementById('userForm').reset();
+                document.getElementById('userId').value = '';
+                document.getElementById('deleteBtn').style.display = 'none';
+                document.getElementById('bonusSection').style.display = 'none';
+            } else {
+                // Edit User
+                document.getElementById('editorTitle').textContent = 'Edit User: ' + user.username;
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userName').value = user.username;
+                document.getElementById('userPass').value = ''; // Don't show hash
+                document.getElementById('userRole').value = user.role;
+                document.getElementById('deleteBtn').style.display = 'block';
+
+                document.getElementById('bonusSection').style.display = 'block';
+                loadBonuses(user.id);
+            }
+        }
+
+        async function loadBonuses(userId) {
+            const res = await fetch(`/admin/users/bonuses/${userId}`);
+            const bonuses = await res.json();
+            const list = document.getElementById('bonusList');
+            list.innerHTML = '';
+
+            if (bonuses.length === 0) {
+                list.innerHTML = '<p style="color:#666; font-size:0.9em;">No adjustments recorded.</p>';
+                return;
+            }
+
+            bonuses.forEach(b => {
+                const div = document.createElement('div');
+                div.style.background = '#222';
+                div.style.padding = '5px 10px';
+                div.style.marginBottom = '5px';
+                div.style.borderRadius = '3px';
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+
+                div.innerHTML = `
+                    <span>
+                        <span style="color: ${b.points >= 0 ? 'var(--success-color)' : 'var(--danger-color)'}; font-weight:bold;">
+                            ${b.points >= 0 ? '+' : ''}${b.points}
+                        </span> 
+                        <span style="color:#ccc;">${b.reason || 'Adjustment'}</span>
+                    </span>
+                    <button onclick="deleteBonus(${b.id}, ${userId})" style="background:none; border:none; color:#666; cursor:pointer;">&times;</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        async function addBonus() {
+            const userId = document.getElementById('userId').value;
+            const points = document.getElementById('bonusPoints').value;
+            const reason = document.getElementById('bonusReason').value;
+
+            if (!points || !userId) return;
+
+            await fetch('/admin/users/bonuses/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, points, reason })
+            });
+
+            document.getElementById('bonusPoints').value = '';
+            document.getElementById('bonusReason').value = '';
+            loadBonuses(userId);
+        }
+
+        async function deleteBonus(id, userId) {
+            if (!confirm('Remove this adjustment?')) return;
+            await fetch('/admin/users/bonuses/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            loadBonuses(userId);
+        }
+
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // We'll use a consolidated endpoint '/admin/users/save'
+            const res = await fetch('/admin/users/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                loadUsers();
+                if (!data.id) selectUser(null); // Reset if new user, otherwise stay
+                alert('Saved successfully');
+            } else {
+                alert('Error saving user');
+            }
+        });
+
+        async function deleteUser() {
+            const id = document.getElementById('userId').value;
+            if (!confirm('Delete this user?')) return;
+
+            await fetch('/admin/users/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: id })
+            });
+            loadUsers();
+            selectUser(null);
+        }
+
+        loadUsers();
+    </script>
+
+    <%- include('partials/footer') %>

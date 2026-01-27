@@ -1,0 +1,83 @@
+<%- include('partials/header') %>
+
+    <div class="card glow-card">
+        <h2
+            style="font-family: 'Orbitron', sans-serif; letter-spacing: 2px; color: var(--accent-color); text-transform: uppercase;">
+            Operator Profile: <span style="color: #fff;">
+                <%= profileUser.username %>
+            </span>
+        </h2>
+
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+
+            <!-- Solved Flags -->
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="color: var(--success-color); border-bottom: 1px solid var(--success-color);">
+                    Resolved Targets (<%= flags.filter(f=> f.solved).length %>)
+                </h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <% flags.filter(f=> f.solved).forEach(flag => { %>
+                        <div
+                            style="background: rgba(35, 134, 54, 0.1); border: 1px solid var(--success-color); padding: 5px 10px; border-radius: 4px; color: #fff; font-size: 0.9em; box-shadow: 0 0 5px rgba(35, 134, 54, 0.2);">
+                            <%= flag.name %>
+                                <span style="color: var(--text-secondary); font-size: 0.8em;">(<%= flag.points %>
+                                        pts)</span>
+                        </div>
+                        <% }) %>
+                </div>
+                <% if (flags.filter(f=> f.solved).length === 0) { %>
+                    <p style="color: var(--text-secondary);">No targets resolved yet.</p>
+                    <% } %>
+            </div>
+
+            <!-- Unsolved Flags -->
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="color: var(--danger-color); border-bottom: 1px solid var(--danger-color);">
+                    Active Targets (<%= flags.filter(f=> !f.solved).length %>)
+                </h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <% flags.filter(f=> !f.solved).forEach(flag => { %>
+                        <div
+                            style="background: rgba(218, 54, 51, 0.05); border: 1px solid #333; padding: 5px 10px; border-radius: 4px; color: var(--text-secondary); font-size: 0.9em;">
+                            <%= flag.name %>
+                                <span style="color: #555; font-size: 0.8em;">(<%= flag.points %>pts)</span>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+
+            <!-- Bonus Points -->
+            <% if (typeof bonuses !=='undefined' && bonuses.length> 0) { %>
+                <div style="flex: 1; min-width: 300px;">
+                    <h3 style="color: var(--accent-color); border-bottom: 1px solid var(--accent-color);">
+                        Operational Adjustments
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <% bonuses.forEach(b=> {
+                            const isPositive = b.points >= 0;
+                            const color = isPositive ? 'var(--success-color)' : 'var(--danger-color)';
+                            %>
+                            <div
+                                style="background: rgba(255, 255, 255, 0.05); border: 1px solid <%= color %>; padding: 10px; border-radius: 4px; color: #fff;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <strong>
+                                        <%= b.reason || 'Adjustment' %>
+                                    </strong>
+                                    <span style="color: <%= color %>; font-weight: bold;">
+                                        <%= isPositive ? '+' : '' %>
+                                            <%= b.points %> pts
+                                    </span>
+                                </div>
+                                <small style="color: #888;">
+                                    <%= new Date(b.timestamp).toLocaleString() %>
+                                </small>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+                <% } %>
+
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>

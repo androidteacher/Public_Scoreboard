@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range Scoreboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="brand">CYBER RANGE <span style="color:var(--text-primary)">//</span> SCOREBOARD</div>
+        <nav>
+            <a href="/">Leaderboard</a>
+            <a href="/stats">Statistics</a>
+            <% if (typeof user !=='undefined' && user.userId) { %>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/change-password">Change Password</a>
+                <% if (user.role==='admin' ) { %>
+                    <a href="/admin/dashboard">Admin</a>
+                    <% } %>
+                        <a href="/logout">Logout</a>
+                        <% } else { %>
+                            <a href="/login">Login</a>
+                            <a href="/register" class="btn-glow">Register</a>
+                            <% } %>
+        </nav>
+    </header>
+    <div class="container">

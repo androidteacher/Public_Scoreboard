@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+    <div class="card glow-card">
+        <h2 style="color: var(--accent-color);"><span class="icon">💾</span> Backup & Restore</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            Export the full database state to a JSON file, or restore from a previous backup.
+            <br>
+            <span style="color: var(--danger-color);">WARNING: Restoring will completely wipe and overwrite the current
+                database!</span>
+        </p>
+
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+            <!-- Export Section -->
+            <div
+                style="flex: 1; min-width: 300px; border: 1px solid #333; padding: 2rem; border-radius: 4px; background: #111;">
+                <h3 style="color: var(--success-color);">Export Database</h3>
+                <p>Download a complete snapshot of Users, Flags, Submissions, and Points.</p>
+                <a href="/admin/backup/export" class="btn"
+                    style="display: inline-block; background: var(--success-color); color: #000; padding: 1rem 2rem; text-decoration: none; font-weight: bold; margin-top: 1rem; border-radius: 4px;">
+                    Download Backup (.json)
+                </a>
+            </div>
+
+            <!-- Import Section -->
+            <div
+                style="flex: 1; min-width: 300px; border: 1px solid var(--danger-color); padding: 2rem; border-radius: 4px; background: rgba(255, 0, 60, 0.05);">
+                <h3 style="color: var(--danger-color);">Restore Database</h3>
+                <p>Upload a previously exported JSON file to restore the system state.</p>
+
+                <form action="/admin/backup/import" method="POST" enctype="multipart/form-data"
+                    onsubmit="return confirm('CRITICAL WARNING: This will DELETE ALL CURRENT DATA and replace it with the backup. Are you absolutely sure?');">
+                    <div class="form-group">
+                        <input type="file" name="backupFile" accept=".json" required style="border: 1px solid #555;">
+                    </div>
+                    <button type="submit" style="background: var(--danger-color); color: white; width: 100%;">
+                        RESTORE DATA
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>

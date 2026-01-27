@@ -1,0 +1,117 @@
+<%- include('partials/header') %>
+
+    <div class="card glow-card crt" style="position: relative; overflow: hidden; min-height: 80vh;">
+        <h2 class="text-center glitch" data-text="iCSI Cyber Range Leaderboard">iCSI Cyber Range Leaderboard</h2>
+
+        <div class="leaderboard-grid">
+            <!-- Left Column -->
+            <div>
+                <table id="table-left">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Operator</th>
+                            <th style="width: 80px;">Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <table id="table-right">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Operator</th>
+                            <th style="width: 80px;">Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <button id="btn-prev" onclick="changePage(-1)">[ &lt; PREV ]</button>
+            <span id="page-indicator" style="align-self: center; font-family: var(--font-mono); color: #888;">PAGE
+                1</span>
+            <button id="btn-next" onclick="changePage(1)">[ NEXT &gt; ]</button>
+        </div>
+    </div>
+
+    <script>
+        let allUsers = [];
+        let currentPage = 1;
+        const itemsPerPage = 60; // 30 per column
+
+        // Initial Fetch
+        fetch('/api/scoreboard')
+            .then(res => res.json())
+            .then(data => {
+                allUsers = data;
+                renderPage();
+            })
+            .catch(err => console.error("Uplink Failed:", err));
+
+        function renderPage() {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = allUsers.slice(start, end);
+
+            const midPoint = Math.ceil(pageData.length / 2);
+            const leftData = pageData.slice(0, midPoint);
+            const rightData = pageData.slice(midPoint);
+
+            renderTable(document.querySelector('#table-left tbody'), leftData, start);
+            renderTable(document.querySelector('#table-right tbody'), rightData, start + midPoint);
+
+            // Update Controls
+            document.getElementById('page-indicator').textContent = `PAGE ${currentPage} / ${Math.ceil(allUsers.length / itemsPerPage) || 1}`;
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = end >= allUsers.length;
+        }
+
+        function renderTable(tbody, data, startIndex) {
+            tbody.innerHTML = '';
+            data.forEach((user, index) => {
+                const rank = startIndex + index + 1;
+                const tr = document.createElement('tr');
+
+                // Status Bar Logic
+                const percent = Math.min((user.score / 2000) * 100, 100); // 2000pts as "full bar" roughly
+                const barColor = rank <= 3 ? 'var(--accent-color)' : 'var(--success-color)';
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
+
+                tr.innerHTML = `
+                    <td class="${rankClass}">${rank}</td>
+                    <td>
+                        <a href="/user/${user.id}" style="text-decoration: none; color: inherit; display: block; width: 100%;" 
+                           onmouseover="this.style.color='var(--accent-color)'" 
+                           onmouseout="this.style.color='inherit'">
+                            ${user.username}
+                        </a>
+                    </td>
+                    <td class="score-val">${user.score}</td>
+                    <td style="vertical-align: middle;">
+                        <div style="background: #111; height: 4px; width: 100%; border-radius: 2px; overflow: hidden; border: 1px solid #333;">
+                            <div style="background: ${barColor}; height: 100%; width: ${percent}%; box-shadow: 0 0 5px ${barColor};"></div>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Fill empty rows to maintain layout if needed? No, let height adjust.
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            renderPage();
+        }
+    </script>
+
+    <%- include('partials/footer') %>

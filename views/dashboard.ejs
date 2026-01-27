@@ -1,0 +1,111 @@
+<%- include('partials/header') %>
+
+    <div class="card">
+        <h2>Welcome, <%= user.username %>!</h2>
+
+        <% if (typeof error !=='undefined' && error) { %>
+            <div class="alert text-center">
+                <%= error %>
+            </div>
+            <% } %>
+                <% if (typeof success !=='undefined' && success) { %>
+                    <div class="alert text-center"
+                        style="border-color: var(--success-color); color: var(--success-color); background: rgba(35, 134, 54, 0.1);">
+                        <%= success %>
+                    </div>
+                    <% } %>
+
+                        <div style="display: flex; justify-content: center;">
+                            <!-- Flag Submission -->
+                            <div style="width: 100%; max-width: 600px;">
+                                <h3><span class="icon">🚩</span> Submit Flag</h3>
+                                <form id="submitFlagForm">
+                                    <div class="form-group">
+                                        <input type="text" id="flagInput" class="flag-input"
+                                            placeholder="Enter Flag Value (e.g. flag{...})" required
+                                            style="font-size: 1.2rem; padding: 1.2rem; text-align: center;">
+                                    </div>
+                                    <button type="submit" style="width: 100%; font-size: 1.1rem;">Submit Flag</button>
+                                    <div id="submissionResult" class="mt-2 text-center"
+                                        style="font-weight: bold; min-height: 1.5em;"></div>
+                                </form>
+                            </div>
+                        </div>
+    </div>
+
+    <div class="card">
+        <h2>Solved Flags</h2>
+        <table id="solvedFlagsTable">
+            <thead>
+                <tr>
+                    <th>Flag Name</th>
+                    <th>Points</th>
+                    <th>Date Solved</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="3">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Flag Submission
+        document.getElementById('submitFlagForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const flagValue = document.getElementById('flagInput').value;
+            const resultDiv = document.getElementById('submissionResult');
+
+            const res = await fetch('/api/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flagValue })
+            });
+            const data = await res.json();
+
+            resultDiv.textContent = data.message;
+            resultDiv.className = data.success ? 'mt-2 text-success' : 'mt-2 text-danger';
+            resultDiv.style.color = data.success ? 'var(--success-color)' : 'var(--danger-color)';
+
+            if (data.success) {
+                loadSolvedFlags(); // Refresh list
+                document.getElementById('flagInput').value = '';
+            }
+        });
+
+        // Load Solved Flags
+        function loadSolvedFlags() {
+            fetch('/api/user/solved')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#solvedFlagsTable tbody');
+                    tbody.innerHTML = '';
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3">No flags solved yet. Get hacking!</td></tr>';
+                        return;
+                    }
+                    data.forEach(sub => {
+                        const tr = document.createElement('tr');
+                        const date = sub.timestamp ? new Date(sub.timestamp).toLocaleString() : 'Legacy (Pre-2024)';
+                        tr.innerHTML = `
+                        <td>${sub.name}</td>
+                        <td>${sub.points}</td>
+                        <td>${date}</td>
+                    `;
+                        tbody.appendChild(tr);
+                    });
+                });
+        }
+
+        loadSolvedFlags();
+
+        // Check URL params for alerts
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('success') && urlParams.get('success') === 'PasswordChanged') {
+            alert('Password successfully changed!');
+        }
+    </script>
+
+    <%- include('partials/footer') %>
