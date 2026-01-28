@@ -8,4 +8,5 @@ README.md
 data/
 uploads/
 scoreboard_backup_*.json
+Yellow_List.csv
 *.md
