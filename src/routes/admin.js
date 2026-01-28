@@ -110,6 +110,53 @@ router.post('/users/bonuses/delete', (req, res) => {
 });
 
 
+// User Flag Status Management
+router.get('/users/flags/:userId', (req, res) => {
+    const { userId } = req.params;
+    const sql = `
+        SELECT f.id as flag_id, f.name, f.points, f.category, s.id as submission_id, s.timestamp
+        FROM flags f
+        LEFT JOIN submissions s ON f.id = s.flag_id AND s.user_id = ?
+        ORDER BY f.category, f.name
+    `;
+    db.all(sql, [userId], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+router.post('/submissions/create', (req, res) => {
+    const { userId, flagId } = req.body;
+
+    // Get flag points first
+    db.get('SELECT points FROM flags WHERE id = ?', [flagId], (err, flag) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (!flag) return res.status(404).json({ error: 'Flag not found' });
+
+        db.run('INSERT INTO submissions (user_id, flag_id, points_awarded) VALUES (?, ?, ?)',
+            [userId, flagId, flag.points],
+            (err) => {
+                if (err) {
+                    if (err.message.includes('UNIQUE constraint failed')) {
+                        return res.json({ success: false, message: 'Already solved' });
+                    }
+                    return res.status(500).json({ error: err.message });
+                }
+                res.json({ success: true });
+            }
+        );
+    });
+});
+
+router.post('/submissions/delete', (req, res) => {
+    const { userId, flagId } = req.body;
+    db.run('DELETE FROM submissions WHERE user_id = ? AND flag_id = ?', [userId, flagId], (err) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true });
+    });
+});
+
+
 // Flag Management
 router.get('/flags', (req, res) => {
     res.render('admin_flags');

@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-slim
 
 WORKDIR /app
 
@@ -10,6 +10,7 @@ RUN npm install --omit=dev
 
 # Copy application source
 COPY . .
+RUN mkdir -p data
 
 # Expose port
 EXPOSE 4005

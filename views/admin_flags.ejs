@@ -9,6 +9,9 @@
             <div
                 style="flex: 1; max-height: 600px; overflow-y: auto; border-right: 1px solid #333; padding-right: 1rem;">
                 <h3>Existing Flags</h3>
+                <input type="text" id="flagSearch" placeholder="Search flags..."
+                    style="width: 100%; padding: 8px; margin-bottom: 0.5rem; background: #222; border: 1px solid #444; color: #fff; border-radius: 4px;"
+                    onkeyup="renderList()">
                 <button onclick="selectFlag(null)" class="btn"
                     style="width: 100%; margin-bottom: 1rem; background: var(--success-color); color: #000;">+ Add New
                     Flag</button>
@@ -64,9 +67,14 @@
         }
 
         function renderList() {
+            const query = document.getElementById('flagSearch') ? document.getElementById('flagSearch').value.toLowerCase() : '';
             const list = document.getElementById('flagList');
             list.innerHTML = '';
-            flags.forEach(flag => {
+
+            flags.filter(flag => {
+                return flag.name.toLowerCase().includes(query) ||
+                    flag.value.toLowerCase().includes(query);
+            }).forEach(flag => {
                 const div = document.createElement('div');
                 div.style.padding = '10px';
                 div.style.background = '#111';

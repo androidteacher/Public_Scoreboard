@@ -62,6 +62,14 @@
                             style="background: var(--accent-color); color: #000; padding: 5px 15px;">Add</button>
                     </div>
                 </div>
+
+                <div id="flagSection"
+                    style="display: none; border-top: 1px solid #333; margin-top: 2rem; padding-top: 1rem;">
+                    <h4>Flag Status Management</h4>
+                    <div id="userFlagList" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -114,6 +122,7 @@
                 document.getElementById('userId').value = '';
                 document.getElementById('deleteBtn').style.display = 'none';
                 document.getElementById('bonusSection').style.display = 'none';
+                document.getElementById('flagSection').style.display = 'none';
             } else {
                 // Edit User
                 document.getElementById('editorTitle').textContent = 'Edit User: ' + user.username;
@@ -125,6 +134,9 @@
 
                 document.getElementById('bonusSection').style.display = 'block';
                 loadBonuses(user.id);
+
+                document.getElementById('flagSection').style.display = 'block';
+                loadUserFlags(user.id);
             }
         }
 
@@ -188,6 +200,72 @@
                 body: JSON.stringify({ id })
             });
             loadBonuses(userId);
+        }
+
+        // --- Flag Management Logic ---
+        async function loadUserFlags(userId) {
+            const res = await fetch(`/admin/users/flags/${userId}`);
+            const flags = await res.json();
+            const list = document.getElementById('userFlagList');
+            list.innerHTML = '';
+
+            flags.forEach(f => {
+                const isSolved = !!f.submission_id;
+                const div = document.createElement('div');
+                div.style.background = '#222';
+                div.style.padding = '5px 10px';
+                div.style.marginBottom = '5px';
+                div.style.borderRadius = '3px';
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+                div.style.borderLeft = isSolved ? '4px solid var(--success-color)' : '4px solid #444';
+
+                // Status Icon Button
+                const btn = document.createElement('button');
+                btn.style.border = 'none';
+                btn.style.cursor = 'pointer';
+                btn.style.fontSize = '1.2em';
+                btn.style.background = 'transparent';
+
+                if (isSolved) {
+                    btn.innerHTML = '❌'; // Red X to revoke
+                    btn.title = 'Revoke (Unsolve)';
+                    btn.onclick = () => revokeFlag(userId, f.flag_id);
+                } else {
+                    btn.innerHTML = '✅'; // Green Check to award
+                    btn.title = 'Award (Solve)';
+                    btn.onclick = () => awardFlag(userId, f.flag_id);
+                }
+
+                div.innerHTML = `
+                    <span>
+                        <b>${f.name}</b> <small style="color:#888">(${f.points}pts)</small>
+                    </span>
+                `;
+                div.appendChild(btn);
+                list.appendChild(div);
+            });
+        }
+
+        async function awardFlag(userId, flagId) {
+            if (!confirm('Manually award this flag?')) return;
+            await fetch('/admin/submissions/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, flagId })
+            });
+            loadUserFlags(userId);
+        }
+
+        async function revokeFlag(userId, flagId) {
+            if (!confirm('Revoke this flag submission?')) return;
+            await fetch('/admin/submissions/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, flagId })
+            });
+            loadUserFlags(userId);
         }
 
         document.getElementById('userForm').addEventListener('submit', async (e) => {
