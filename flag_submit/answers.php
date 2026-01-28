@@ -8,7 +8,7 @@ $description = "<h2 align='center'> Pen Test Subnet Leaderboard</h2>";
 
 //$removes = array("A", "B" ); # text to remove from score labels
 
-$poss_chals = array("Flag_1", "Flag_2","Flag_3", "Flag_4","Flag_5","Flag_6","Flag_7","Flag_8","Flag_9","Flag_A","Flag_B","Flag_C","Flag_D","Flag_E","Flag_F", "Flag_G","Flag_H","Flag_J","Flag_K","Flag_L","Flag_M","Flag_N","Flag_O", "Flag_P","Flag_Q","Flag_R","Flag_S","Flag_T","Flag_U","Flag_W","Flag_Y","Red1","Red2","Red3","Red4","Red5","Red6","Red7","Red8","Red9","Red12","Red13","Red14","Red15","Red16","Red17","Red18","Red19","Red20","Red21","Red22", "Red23","Red24","Red25","Red26","Red27","Red28","Red29","Red30","Red31","Red32","Red33","Red34","Red35","Red36","Red37","Red38","Red39","Red40","Red41", "Red42","Red43","Red44","Red45","Red46","Red47","Red48","Red49","Red50","Red51","Red52","Red53","Red54","Red55","Red56","Red57","Red58","Red59","Red60","Red61","Arena1","Arena2","Arena3","Arena4","Arena5","EasterEgg1","EasterEgg2","EasterEgg3","EasterEgg4","EasterEgg5","EasterEgg6","EasterEgg7","EasterEgg8","EasterEgg9","EasterEgg10","EasterEgg11","EasterEgg12","EasterEgg13","BREAK"
+$poss_chals = array("Flag_1", "Flag_2","Flag_3", "Flag_4","Flag_5","Flag_6","Flag_7","Flag_8","Flag_9","Flag_A","Flag_B","Flag_C","Flag_D","Flag_E","Flag_F", "Flag_G","Flag_H","Flag_J","Flag_K","Flag_L","Flag_M","Flag_N","Flag_O", "Flag_P","Flag_Q","Flag_R","Flag_S","Flag_T","Flag_U","Flag_W","Flag_Y","Red1","Red2","Red3","Red4","Red5","Red6","Red7","Red8","Red9","Red12","Red13","Red14","Red15","Red16","Red17","Red18","Red19","Red20","Red21","Red22", "Red23","Red24","Red25","Red26","Red27","Red28","Red29","Red30","Red31","Red32","Red33","Red34","Red35","Red36","Red37","Red38","Red39","Red40","Red41", "Red42","Red43","Red44","Red45","Red46","Red47","Red48","Red49","Red50","Red51","Red52","Red53","Red54","Red55","Red56","Red57","Red58","Red59","Red60","Red61","Red62","Red63","Red64","Arena1","Arena2","Arena3","Arena4","Arena5","EasterEgg1","EasterEgg2","EasterEgg3","EasterEgg4","EasterEgg5","EasterEgg6","EasterEgg7","EasterEgg8","EasterEgg9","EasterEgg10","EasterEgg11","EasterEgg12","EasterEgg13","BREAK"
 
 );
 
@@ -103,6 +103,9 @@ $correct_answers = array(
 	array( "Red59", "Flag-CtfD4Tw#4", 1500 ),      
 	array( "Red60", "flag-9f3cA7dE2bKqM8VxW4Jr0HnP", 500 ),      
 	array( "Red61", "Flag-8e4b2a9", 500 ),      
+	array( "Red62", "CTF{CVE-2026-24061-R00T-SHELL}", 200 ),
+	array( "Red63", "Flag-1d645bb338b55adb4c13e39fdce5470", 200 ),
+	array( "Red64", "Flag-120aa10fbb4f66d2e70552da52413907", 200 ),      
 	array( "Arena1", "Flag-Are3NaChamp", 300 ),
 	array( "Arena2", "Arena2-MassAssignMe123", 200 ),
 	array( "Arena3", "Arena3_SUP3RFast4Sure", 700 ),      
