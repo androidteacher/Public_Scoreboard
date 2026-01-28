@@ -5,3 +5,7 @@ data/*.db
 *.log
 *.zip
 *.tar
+*.tar
+scoreboard_backup_*.json
+data/
+uploads/

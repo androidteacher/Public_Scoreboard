@@ -63,6 +63,23 @@ router.get('/user/solved', isAuthenticated, (req, res) => {
     });
 });
 
+// Recent Solves Ticker
+router.get('/recent', (req, res) => {
+    const sql = `
+        SELECT u.username, f.name as flag_name, s.points_awarded, s.timestamp
+        FROM submissions s
+        JOIN users u ON s.user_id = u.id
+        JOIN flags f ON s.flag_id = f.id
+        WHERE s.timestamp > datetime('now', '-7 days')
+        ORDER BY s.timestamp DESC
+        LIMIT 10
+    `;
+    db.all(sql, [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 // Cumulative Stats for Graph
 router.get('/stats', (req, res) => {
     // 1. Get Base Scores (Legacy)
@@ -105,7 +122,7 @@ router.get('/stats', (req, res) => {
 
             const topUsers = Object.entries(finalScores)
                 .sort((a, b) => b[1] - a[1])
-                .slice(0, 20)
+                .slice(0, 500)
                 .map(e => e[0]);
 
             const topUserSet = new Set(topUsers);

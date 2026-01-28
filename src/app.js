@@ -29,6 +29,12 @@ app.use(session({
     cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 } // 1 week
 }));
 
+// Global middleware to make user session available to all views
+app.use((req, res, next) => {
+    res.locals.user = req.session;
+    next();
+});
+
 // View engine setup
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');

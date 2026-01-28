@@ -3,43 +3,66 @@
     <div class="card glow-card crt" style="position: relative; overflow: hidden; min-height: 80vh;">
         <h2 class="text-center glitch" data-text="iCSI Cyber Range Leaderboard">iCSI Cyber Range Leaderboard</h2>
 
-        <div class="leaderboard-grid">
-            <!-- Left Column -->
-            <div>
-                <table id="table-left">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;">#</th>
-                            <th>Operator</th>
-                            <th style="width: 80px;">Score</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+        <div style="display: flex; gap: 20px;">
+            <!-- Main Leaderboard -->
+            <div style="flex: 2;">
+                <div class="leaderboard-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <table id="table-left">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Operator</th>
+                                    <th style="width: 80px;">Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div>
+                        <table id="table-right">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Operator</th>
+                                    <th style="width: 80px;">Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <button id="btn-prev" onclick="changePage(-1)">[ &lt; PREV ]</button>
+                    <span id="page-indicator"
+                        style="align-self: center; font-family: var(--font-mono); color: #888;">PAGE
+                        1</span>
+                    <button id="btn-next" onclick="changePage(1)">[ NEXT &gt; ]</button>
+                </div>
             </div>
 
-            <!-- Right Column -->
-            <div>
-                <table id="table-right">
-                    <thead>
-                        <tr>
-                            <th style="width: 50px;">#</th>
-                            <th>Operator</th>
-                            <th style="width: 80px;">Score</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <!-- Recent Solves Ticker -->
+            <div style="flex: 1; min-width: 250px; border-left: 1px solid #444; padding-left: 20px;">
+                <h4
+                    style="color: var(--accent-color); text-align: center; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px;">
+                    Recent Solves</h4>
+                <div id="ticker-container"
+                    style="height: 250px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px;">
+                    <div id="ticker-content" style="position: absolute; width: 100%; top: 100%;">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div id="ticker-empty"
+                        style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.8em;">
+                        No solves for 7 days!
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="pagination">
-            <button id="btn-prev" onclick="changePage(-1)">[ &lt; PREV ]</button>
-            <span id="page-indicator" style="align-self: center; font-family: var(--font-mono); color: #888;">PAGE
-                1</span>
-            <button id="btn-next" onclick="changePage(1)">[ NEXT &gt; ]</button>
         </div>
     </div>
 
@@ -56,6 +79,53 @@
                 renderPage();
             })
             .catch(err => console.error("Uplink Failed:", err));
+
+        // Ticker Fetch
+        fetch('/api/recent')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('ticker-content');
+                const empty = document.getElementById('ticker-empty');
+
+                if (data.length === 0) {
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                data.forEach(solve => {
+                    const el = document.createElement('div');
+                    el.style.padding = '8px';
+                    el.style.borderBottom = '1px solid #333';
+                    const date = new Date(solve.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    el.innerHTML = `
+                        <div style="color: var(--accent-color); font-size: 0.9em;"><b>${solve.username}</b></div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #bbb;">
+                            <span>${solve.flag_name}</span>
+                            <span>+${solve.points_awarded}</span>
+                        </div>
+                        <div style="font-size: 0.7em; color: #555; text-align: right;">${date}</div>
+                    `;
+                    container.appendChild(el);
+                });
+
+                // Ticker Animation
+                const trackHeight = container.offsetHeight;
+                const viewHeight = 250;
+
+                let currentTop = viewHeight;
+                function tick() {
+                    currentTop -= 0.5; // Slower speed
+                    if (currentTop < -trackHeight) {
+                        currentTop = viewHeight;
+                    }
+                    container.style.top = currentTop + 'px';
+                    requestAnimationFrame(tick);
+                }
+
+                if (trackHeight > 0) tick();
+            })
+            .catch(err => console.error("Ticker Failed:", err));
 
         function renderPage() {
             const start = (currentPage - 1) * itemsPerPage;
