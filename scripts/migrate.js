@@ -79,13 +79,27 @@ function migrate() {
 
         console.log(`Found ${flags.length} flags in answers.php.`);
 
-        const stmtFlag = db.prepare("INSERT OR IGNORE INTO flags (name, value, points) VALUES (?, ?, ?)");
+        const stmtFlag = db.prepare("INSERT OR IGNORE INTO flags (name, value, points, category) VALUES (?, ?, ?, ?)");
 
         flags.forEach(flag => {
-            stmtFlag.run(flag.name, flag.value, flag.points, function (err) {
+            stmtFlag.run(flag.name, flag.value, flag.points, 'Blue', function (err) {
                 if (err) console.error(err);
             });
         });
+
+        // 2. Import Yellow Flags
+        const yellowPath = path.join(__dirname, '../src/yellow_flags.json');
+        if (fs.existsSync(yellowPath)) {
+            const yellowData = fs.readFileSync(yellowPath, 'utf8');
+            const yellowFlags = JSON.parse(yellowData);
+            console.log(`Found ${yellowFlags.length} Yellow flags.`);
+
+            yellowFlags.forEach(flag => {
+                stmtFlag.run(flag.name, flag.value, flag.points, flag.category, function (err) {
+                    if (err) console.error(err);
+                });
+            });
+        }
 
         stmtFlag.finalize(() => {
             console.log("Flags imported. Skipping user data import for public build.");
