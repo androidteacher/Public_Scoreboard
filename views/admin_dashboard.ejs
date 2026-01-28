@@ -1,12 +1,81 @@
 <%- include('partials/header') %>
 
-    <div class="card">
-        <h2 style="color: var(--danger-color);">ADMIN PANEL</h2>
-        <div style="display: flex; gap: 1rem;">
-            <a href="/admin/users" class="btn" style="background: var(--text-primary); color: #000;">Manage Users</a>
-            <a href="/admin/flags" class="btn" style="background: var(--text-primary); color: #000;">Manage Flags</a>
-            <a href="/admin/backup" class="btn" style="background: var(--accent-color); color: #000;">Backup /
-                Restore</a>
+    <style>
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .action-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 2rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .action-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            transform: translateY(-5px);
+            background: rgba(0, 20, 0, 0.8);
+        }
+
+        .action-card h3 {
+            margin: 1rem 0 0.5rem 0;
+            color: var(--accent-color);
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .action-card p {
+            color: #888;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 5px var(--accent-color));
+        }
+    </style>
+
+    <div class="card glow-card" style="min-height: 80vh;">
+        <h2 class="text-center glitch" data-text="SYSTEM ADMINISTRATION">SYSTEM ADMINISTRATION</h2>
+
+        <div class="admin-grid">
+            <!-- Manage Users -->
+            <a href="/admin/users" class="action-card">
+                <div class="card-icon">👥</div>
+                <h3>Manage Users</h3>
+                <p>View operator profiles, grant bonuses, and revoke flags.</p>
+            </a>
+
+            <!-- Manage Flags -->
+            <a href="/admin/flags" class="action-card">
+                <div class="card-icon">🚩</div>
+                <h3>Manage Flags</h3>
+                <p>Create, edit, or delete challenge flags and categories.</p>
+            </a>
+
+            <!-- Backup & Restore -->
+            <a href="/admin/backup" class="action-card">
+                <div class="card-icon">💾</div>
+                <h3>Backup / Restore</h3>
+                <p>Create snapshots of the database or restore from archives.</p>
+            </a>
         </div>
     </div>
 
