@@ -9,6 +9,12 @@
                     <%= error %>
                 </div>
                 <% } %>
+            
+            <% if (locals.showDefaultCredsWarning) { %>
+                <div class="alert text-center" style="background-color: #ffcc00; color: #000; font-weight: bold;">
+                    The default username and password are username:admin password:admin
+                </div>
+            <% } %>
 
                     <form action="/login" method="POST">
                         <div class="form-group">
