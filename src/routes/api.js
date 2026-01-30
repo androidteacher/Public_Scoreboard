@@ -22,6 +22,14 @@ router.get('/scoreboard', (req, res) => {
     });
 });
 
+// Active First Blood Flags
+router.get('/first-blood', (req, res) => {
+    db.all('SELECT name, points, first_blood_bonus FROM flags WHERE is_first_blood = 1 ORDER BY first_blood_bonus DESC', [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 // Flag Submission
 router.post('/submit', isAuthenticated, (req, res) => {
     const { flagValue } = req.body;
@@ -37,13 +45,33 @@ router.post('/submit', isAuthenticated, (req, res) => {
             if (sub) return res.json({ success: false, message: 'Already Solved' });
 
             // Record submission
-            db.run('INSERT INTO submissions (user_id, flag_id, points_awarded) VALUES (?, ?, ?)',
-                [userId, flag.id, flag.points],
-                (err) => {
-                    if (err) return res.status(500).json({ error: 'Database error' });
-                    res.json({ success: true, message: `Flag Solved! +${flag.points} points` });
-                }
-            );
+            // Record submission
+            const totalPoints = flag.points + (flag.is_first_blood ? flag.first_blood_bonus : 0);
+
+            db.serialize(() => {
+                db.run('INSERT INTO submissions (user_id, flag_id, points_awarded) VALUES (?, ?, ?)',
+                    [userId, flag.id, flag.points],
+                    (err) => {
+                        if (err) return res.status(500).json({ error: 'Database error' });
+
+                        if (flag.is_first_blood && flag.first_blood_bonus > 0) {
+                            db.run('INSERT INTO bonus_points (user_id, points, reason) VALUES (?, ?, ?)',
+                                [userId, flag.first_blood_bonus, `First Blood: ${flag.name}`],
+                                (err) => {
+                                    if (err) console.error("Error awarding first blood bonus:", err);
+                                    res.json({
+                                        success: true,
+                                        message: `Flag Solved! +${flag.points} points` +
+                                            (flag.is_first_blood ? `\nFIRST BLOOD BONUS! +${flag.first_blood_bonus} points` : '')
+                                    });
+                                }
+                            );
+                        } else {
+                            res.json({ success: true, message: `Flag Solved! +${flag.points} points` });
+                        }
+                    }
+                );
+            });
         });
     });
 });
