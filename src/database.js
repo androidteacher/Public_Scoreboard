@@ -37,8 +37,16 @@ function initSchema() {
             value TEXT NOT NULL,
             points INTEGER NOT NULL,
             category TEXT,
-            description TEXT
-        )`);
+            description TEXT,
+            is_first_blood BOOLEAN DEFAULT 0,
+            first_blood_bonus INTEGER DEFAULT 0
+        )`, (err) => {
+            if (!err) {
+                // Attempt migrations for existing tables (silent failure if col exists)
+                db.run("ALTER TABLE flags ADD COLUMN is_first_blood BOOLEAN DEFAULT 0", () => { });
+                db.run("ALTER TABLE flags ADD COLUMN first_blood_bonus INTEGER DEFAULT 0", () => { });
+            }
+        });
 
         // Submissions Table
         db.run(`CREATE TABLE IF NOT EXISTS submissions (
