@@ -4,7 +4,24 @@ const db = require('../database');
 const router = express.Router();
 
 router.get('/login', (req, res) => {
-    res.render('login', { error: null });
+    // Check if admin has default password
+    const adminUser = 'admin';
+    const defaultAdminPass = 'admin'; // We need access to check this.
+    // However, checking hash is better.
+    // Actually, migration uses specific hash for 'admin'.
+    // Let's query admin user to see if password hash matches default.
+    // Since this is async, we need to handle it.
+
+    db.get('SELECT * FROM users WHERE username = ?', ['admin'], async (err, user) => {
+        let showDefaultCredsWarning = false;
+        if (user && user.password_hash) {
+            const match = await bcrypt.compare('admin', user.password_hash);
+            if (match) {
+                showDefaultCredsWarning = true;
+            }
+        }
+        res.render('login', { error: null, showDefaultCredsWarning });
+    });
 });
 
 router.post('/login', (req, res) => {
