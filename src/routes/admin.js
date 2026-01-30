@@ -170,12 +170,14 @@ router.get('/flags/data', (req, res) => {
 });
 
 router.post('/flags/save', (req, res) => {
-    const { id, name, value, points, category } = req.body;
+    const { id, name, value, points, category, is_first_blood, first_blood_bonus } = req.body;
+    const isFirstBlood = is_first_blood ? 1 : 0;
+    const bonus = first_blood_bonus ? parseInt(first_blood_bonus) : 0;
 
     if (id) {
         // Update
-        db.run('UPDATE flags SET name = ?, value = ?, points = ?, category = ? WHERE id = ?',
-            [name, value, points, category, id],
+        db.run('UPDATE flags SET name = ?, value = ?, points = ?, category = ?, is_first_blood = ?, first_blood_bonus = ? WHERE id = ?',
+            [name, value, points, category, isFirstBlood, bonus, id],
             (err) => {
                 if (err) return res.status(500).json({ error: err.message });
 
@@ -188,8 +190,8 @@ router.post('/flags/save', (req, res) => {
         );
     } else {
         // Insert
-        db.run('INSERT INTO flags (name, value, points, category) VALUES (?, ?, ?, ?)',
-            [name, value, points, category],
+        db.run('INSERT INTO flags (name, value, points, category, is_first_blood, first_blood_bonus) VALUES (?, ?, ?, ?, ?, ?)',
+            [name, value, points, category, isFirstBlood, bonus],
             (err) => {
                 if (err) return res.status(500).json({ error: err.message });
                 res.json({ success: true });

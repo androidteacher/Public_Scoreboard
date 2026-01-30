@@ -44,6 +44,24 @@
                         </div>
                     </div>
 
+                    <div
+                        style="background: #222; padding: 10px; border-radius: 4px; margin-top: 10px; border: 1px solid #333;">
+                        <h4 style="margin-top: 0; color: var(--accent-color);">First Blood Bonus</h4>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div class="form-group"
+                                style="flex: 0 0 auto; display: flex; align-items: center; gap: 10px;">
+                                <input type="checkbox" name="is_first_blood" id="flagIsFirstBlood" value="1"
+                                    style="width: auto; margin: 0;">
+                                <label for="flagIsFirstBlood" style="margin: 0; cursor: pointer;">Active First
+                                    Blood</label>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>Bonus Points</label>
+                                <input type="number" name="first_blood_bonus" id="flagFirstBloodBonus" value="0">
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="display: flex; gap: 1rem; margin-top: 1rem;">
                         <button type="submit" style="flex: 2;">Save Flag</button>
                         <button type="button" onclick="deleteFlag()" id="deleteBtn"
@@ -94,6 +112,8 @@
                 document.getElementById('editorTitle').textContent = 'Add New Flag';
                 document.getElementById('flagForm').reset();
                 document.getElementById('flagId').value = '';
+                document.getElementById('flagIsFirstBlood').checked = false;
+                document.getElementById('flagFirstBloodBonus').value = 0;
                 document.getElementById('deleteBtn').style.display = 'none';
             } else {
                 // Edit Mode
@@ -103,6 +123,8 @@
                 document.getElementById('flagValue').value = flag.value;
                 document.getElementById('flagPoints').value = flag.points;
                 document.getElementById('flagCategory').value = flag.category;
+                document.getElementById('flagIsFirstBlood').checked = !!flag.is_first_blood;
+                document.getElementById('flagFirstBloodBonus').value = flag.first_blood_bonus || 0;
                 document.getElementById('deleteBtn').style.display = 'block';
             }
         }
