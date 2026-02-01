@@ -19,16 +19,35 @@
                             <!-- Flag Submission -->
                             <div style="width: 100%; max-width: 600px;">
                                 <h3><span class="icon">🚩</span> Submit Flag</h3>
-                                <form id="submitFlagForm">
-                                    <div class="form-group">
-                                        <input type="text" id="flagInput" class="flag-input"
-                                            placeholder="Enter Flag Value (e.g. flag{...})" required
-                                            style="font-size: 1.2rem; padding: 1.2rem; text-align: center;">
+                                <% if (user.username==='admin' ) { %>
+                                    <div class="alert text-center"
+                                        style="background: #333; color: #aaa; border: 1px solid #555;">
+                                        Please create a test user to verify flags.
                                     </div>
-                                    <button type="submit" style="width: 100%; font-size: 1.1rem;">Submit Flag</button>
-                                    <div id="submissionResult" class="mt-2 text-center"
-                                        style="font-weight: bold; min-height: 1.5em;"></div>
-                                </form>
+                                    <form id="submitFlagForm" style="opacity: 0.5; pointer-events: none;">
+                                        <div class="form-group">
+                                            <input type="text" id="flagInput" class="flag-input"
+                                                placeholder="Enter Flag Value (e.g. flag{...})" required disabled
+                                                style="font-size: 1.2rem; padding: 1.2rem; text-align: center;">
+                                        </div>
+                                        <button type="submit" style="width: 100%; font-size: 1.1rem;" disabled>Submit
+                                            Flag</button>
+                                        <div id="submissionResult" class="mt-2 text-center"
+                                            style="font-weight: bold; min-height: 1.5em;"></div>
+                                    </form>
+                                    <% } else { %>
+                                        <form id="submitFlagForm">
+                                            <div class="form-group">
+                                                <input type="text" id="flagInput" class="flag-input"
+                                                    placeholder="Enter Flag Value (e.g. flag{...})" required
+                                                    style="font-size: 1.2rem; padding: 1.2rem; text-align: center;">
+                                            </div>
+                                            <button type="submit" style="width: 100%; font-size: 1.1rem;">Submit
+                                                Flag</button>
+                                            <div id="submissionResult" class="mt-2 text-center"
+                                                style="font-weight: bold; min-height: 1.5em;"></div>
+                                        </form>
+                                        <% } %>
                             </div>
                         </div>
     </div>
