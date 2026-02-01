@@ -25,10 +25,18 @@ function initSchema() {
         db.run(`CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
+            email TEXT,
             password_hash TEXT, -- Nullable for legacy users who haven't claimed accounts
             role TEXT DEFAULT 'user', -- 'user' or 'admin'
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )`);
+        )`, (err) => {
+            if (!err) {
+                // Migration: Add email column if it doesn't exist
+                db.run("ALTER TABLE users ADD COLUMN email TEXT", () => {
+                    // Ignore error if column already exists 
+                });
+            }
+        });
 
         // Flags Table
         db.run(`CREATE TABLE IF NOT EXISTS flags (

@@ -32,7 +32,18 @@ app.use(session({
 // Global middleware to make user session available to all views
 app.use((req, res, next) => {
     res.locals.user = req.session;
-    next();
+    // If logged in, fetch fresh email (optional, but ensures pre-pop works without relogin)
+    if (req.session && req.session.userId) {
+        const db = require('./database');
+        db.get('SELECT email FROM users WHERE id = ?', [req.session.userId], (err, row) => {
+            if (row) {
+                res.locals.user.email = row.email;
+            }
+            next();
+        });
+    } else {
+        next();
+    }
 });
 
 // View engine setup
