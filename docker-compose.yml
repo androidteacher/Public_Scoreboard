@@ -5,6 +5,8 @@ services:
     build: .
     ports:
       - "4000:4005"
+    environment:
+      - PORT=4005
     volumes:
       - ./data:/app/data
     restart: always

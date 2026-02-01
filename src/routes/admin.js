@@ -23,13 +23,22 @@ router.get('/users/data', (req, res) => {
 
 router.post('/users/delete', (req, res) => {
     const { userId } = req.body;
-    // Transaction-like cleanup (SQLite serializes this anyway)
-    db.serialize(() => {
-        db.run('DELETE FROM submissions WHERE user_id = ?', [userId]);
-        db.run('DELETE FROM bonus_points WHERE user_id = ?', [userId]);
-        db.run('DELETE FROM users WHERE id = ?', [userId], (err) => {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ success: true });
+
+    db.get('SELECT username FROM users WHERE id = ?', [userId], (err, user) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (user.username === 'admin') {
+            return res.status(403).json({ error: 'Cannot delete the admin user.' });
+        }
+
+        // Transaction-like cleanup (SQLite serializes this anyway)
+        db.serialize(() => {
+            db.run('DELETE FROM submissions WHERE user_id = ?', [userId]);
+            db.run('DELETE FROM bonus_points WHERE user_id = ?', [userId]);
+            db.run('DELETE FROM users WHERE id = ?', [userId], (err) => {
+                if (err) return res.status(500).json({ error: err.message });
+                res.json({ success: true });
+            });
         });
     });
 });
@@ -269,9 +278,11 @@ router.post('/backup/import', upload.single('backupFile'), (req, res) => {
 
                 // 2. Restore Users
                 // Need to use ID to preserve relationships
-                const stmtUser = db.prepare('INSERT INTO users (id, username, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?)');
+                const stmtUser = db.prepare('INSERT INTO users (id, username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?, ?)');
                 backup.users.forEach(u => {
-                    stmtUser.run(u.id, u.username, u.password_hash, u.role, u.created_at);
+                    // Check if email exists in backup (backward compatibility)
+                    const email = u.email || null;
+                    stmtUser.run(u.id, u.username, email, u.password_hash, u.role, u.created_at);
                 });
                 stmtUser.finalize();
 

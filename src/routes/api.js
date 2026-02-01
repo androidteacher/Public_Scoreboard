@@ -238,4 +238,24 @@ router.get('/stats', (req, res) => {
     });
 });
 
+// Update User Email
+router.post('/user/email', isAuthenticated, (req, res) => {
+    const userId = req.session.userId;
+    const { email } = req.body;
+
+    if (!email || !email.includes('@')) {
+        return res.json({ success: false, message: 'Invalid email address' });
+    }
+
+    db.run('UPDATE users SET email = ? WHERE id = ?', [email, userId], (err) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+
+        // Update session info if needed, or just rely on DB fetch next time
+        // Actually, let's update session so UI can reflect it if we were storing it there, 
+        // but we are likely fetching it on page load or need to pass it.
+        // For now, success is enough.
+        res.json({ success: true, message: 'Email updated successfully' });
+    });
+});
+
 module.exports = router;

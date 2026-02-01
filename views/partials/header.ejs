@@ -22,6 +22,7 @@
             <a href="/stats">Statistics</a>
             <% if (typeof user !=='undefined' && user.userId) { %>
                 <a href="/dashboard">Dashboard</a>
+                <a href="#" onclick="openEmailModal(); return false;">Set Email</a>
                 <a href="/change-password">Change Password</a>
                 <% if (user.role==='admin' ) { %>
                     <a href="/admin/dashboard">Admin</a>
@@ -35,4 +36,105 @@
                                     style="margin-left: 15px;">CyberLessons101</a>
         </nav>
     </header>
+
+    <!-- Email Modal -->
+    <div id="emailModal" class="modal"
+        style="display:none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8);">
+        <div class="modal-content card"
+            style="background-color: #1a1a1a; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; color: #fff;">
+            <span class="close" onclick="closeEmailModal()"
+                style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+            <h2 style="margin-top: 0;">Set Email Address</h2>
+            <p style="color: #ccc; font-size: 0.9rem;">Your email is private and will not be displayed to others.</p>
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="emailInput">Email:</label>
+                    <input type="email" id="emailInput" name="email" class="form-control"
+                        style="width: 100%; padding: 10px; margin: 10px 0; background: #333; border: 1px solid #555; color: white;"
+                        required>
+                </div>
+                <button type="submit" class="btn-glow" style="width: 100%; margin-top: 10px;">Save Email</button>
+            </form>
+            <div id="emailMsg" style="margin-top: 10px; text-align: center;"></div>
+        </div>
+    </div>
+
+    <script>
+        let emailSaved = false;
+
+        function openEmailModal() {
+            emailSaved = false;
+            const modal = document.getElementById('emailModal');
+            const input = document.getElementById('emailInput');
+            const msg = document.getElementById('emailMsg');
+
+            // Clear previous messages
+            msg.textContent = '';
+            msg.className = '';
+            msg.style.display = 'none';
+
+            // Pre-populate if available in user object
+            const currentEmail = "<%= (typeof user !== 'undefined' && user.email) ? user.email : '' %>";
+            if (currentEmail) input.value = currentEmail;
+
+            modal.style.display = "block";
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').style.display = "none";
+            if (emailSaved) {
+                window.location.href = '/dashboard';
+            }
+        }
+
+        // Close on outside click
+        window.onclick = function (event) {
+            const modal = document.getElementById('emailModal');
+            if (event.target == modal) {
+                closeEmailModal();
+            }
+        }
+
+        document.getElementById('emailForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const msg = document.getElementById('emailMsg');
+
+            msg.textContent = 'Saving...';
+            msg.style.color = '#ccc';
+            msg.style.display = 'block';
+
+            fetch('/api/user/email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+                .then(async res => {
+                    // Try to parse JSON, even if status is error
+                    const data = await res.json().catch(() => null);
+
+                    if (!res.ok) {
+                        // Start thinking about how to handle the error
+                        const errorMsg = (data && data.message) ? data.message : 'Server Error (' + res.status + ')';
+                        throw new Error(errorMsg);
+                    }
+                    return data;
+                })
+                .then(data => {
+                    if (data.success) {
+                        msg.innerHTML = '<strong>Success!</strong> Your email has been saved.';
+                        msg.style.color = '#4caf50'; // Bright green
+                        emailSaved = true;
+                    } else {
+                        // Logic error from server (success: false)
+                        throw new Error(data.message || 'Unknown issue');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    msg.textContent = 'Error: ' + error.message;
+                    msg.style.color = '#f44336';
+                });
+        });
+    </script>
     <div class="container">
