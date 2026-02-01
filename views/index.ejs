@@ -70,6 +70,34 @@
                 <div id="first-blood-container" style="display: flex; flex-direction: column; gap: 10px;">
                     <!-- Populated by JS -->
                 </div>
+
+                <!-- First Blood Scroller -->
+                <h4
+                    style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
+                    Current First-Blood Solves
+                </h4>
+                <div id="fb-scroller-container"
+                    style="height: 150px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 5px;">
+                    <div id="fb-scroller-content" style="text-align: left; position: absolute; width: 100%; top: 100%;">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div id="fb-scroller-empty"
+                        style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.9em;">
+                        No first-blood solves!
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes fb-scroll {
+                        0% {
+                            transform: translateX(0);
+                        }
+
+                        100% {
+                            transform: translateX(-100%);
+                        }
+                    }
+                </style>
             </div>
         </div>
     </div>
@@ -165,6 +193,62 @@
                 });
             })
             .catch(err => console.error("First Blood Failed:", err));
+
+        // First Blood Solves Scroller
+        fetch('/api/first-blood-solves')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('fb-scroller-content');
+                const empty = document.getElementById('fb-scroller-empty');
+                const wrapper = document.getElementById('fb-scroller-container');
+
+                if (data.length === 0) {
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                data.forEach(entry => {
+                    const el = document.createElement('div');
+                    el.style.padding = '8px';
+                    el.style.borderBottom = '1px solid rgba(255, 0, 85, 0.2)';
+
+                    el.innerHTML = `
+                        <div style="color: var(--danger-color, #ff0055); font-size: 0.9em;"><b>${entry.username}</b></div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #bbb;">
+                            <span>${entry.flag_name}</span>
+                            <span>+${entry.points}</span>
+                        </div>
+                        <div style="font-size: 0.7em; color: #ff5555; text-align: right; opacity: 0.7;">FIRST BLOOD</div>
+                    `;
+                    container.appendChild(el);
+                });
+
+                // Vertical Scroll Logic
+                const trackHeight = container.offsetHeight;
+                const viewHeight = 150;
+                let currentTop = viewHeight;
+
+                if (trackHeight > viewHeight) {
+                    function tick() {
+                        currentTop -= 0.5;
+                        if (currentTop < -trackHeight) {
+                            currentTop = viewHeight;
+                        }
+                        container.style.top = currentTop + 'px';
+                        requestAnimationFrame(tick);
+                    }
+                    tick();
+                } else {
+                    // Center content if it fits
+                    container.style.top = '0';
+                    container.style.position = 'relative';
+                    container.style.height = '100%';
+                    container.style.display = 'flex';
+                    container.style.flexDirection = 'column';
+                    container.style.justifyContent = 'center';
+                }
+            })
+            .catch(err => console.error("First Blood Solves Failed:", err));
 
         function renderPage() {
             const start = (currentPage - 1) * itemsPerPage;

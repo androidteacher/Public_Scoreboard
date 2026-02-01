@@ -13,6 +13,7 @@ router.get('/scoreboard', (req, res) => {
             UNION ALL
             SELECT user_id, points FROM bonus_points
         ) t ON u.id = t.user_id
+        WHERE u.username != 'admin'
         GROUP BY u.id
         ORDER BY score DESC
     `;
@@ -25,6 +26,21 @@ router.get('/scoreboard', (req, res) => {
 // Active First Blood Flags
 router.get('/first-blood', (req, res) => {
     db.all('SELECT name, points, first_blood_bonus FROM flags WHERE is_first_blood = 1 ORDER BY first_blood_bonus DESC', [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+// Solvers of Active First Blood Flags
+router.get('/first-blood-solves', (req, res) => {
+    const sql = `
+        SELECT u.username, f.name as flag_name, s.points_awarded as points
+        FROM submissions s 
+        JOIN flags f ON s.flag_id = f.id 
+        JOIN users u ON s.user_id = u.id 
+        WHERE f.is_first_blood = 1 AND u.username != 'admin'
+    `;
+    db.all(sql, [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
     });
@@ -98,7 +114,7 @@ router.get('/recent', (req, res) => {
         FROM submissions s
         JOIN users u ON s.user_id = u.id
         JOIN flags f ON s.flag_id = f.id
-        WHERE s.timestamp > datetime('now', '-7 days')
+        WHERE s.timestamp > datetime('now', '-7 days') AND u.username != 'admin'
         ORDER BY s.timestamp DESC
         LIMIT 10
     `;
@@ -115,6 +131,7 @@ router.get('/stats', (req, res) => {
         SELECT u.username, COALESCE(SUM(s.points_awarded), 0) as base_score
         FROM users u
         LEFT JOIN submissions s ON u.id = s.user_id AND s.is_legacy = 1
+        WHERE u.username != 'admin'
         GROUP BY u.username
     `;
 
@@ -135,6 +152,7 @@ router.get('/stats', (req, res) => {
                 UNION ALL
                 SELECT user_id, timestamp, points, reason FROM bonus_points
             ) t ON u.id = t.user_id
+            WHERE u.username != 'admin'
             ORDER BY t.timestamp ASC
         `;
 
