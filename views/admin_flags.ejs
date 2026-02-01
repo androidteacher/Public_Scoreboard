@@ -68,6 +68,32 @@
                             style="flex: 1; background: var(--danger-color); display: none;">Delete</button>
                     </div>
                 </form>
+
+                <!-- Solvers Table -->
+                <div id="solversSection" style="margin-top: 2rem; display: none;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="margin: 0;">Solvers</h3>
+                        <button type="button" onclick="exportGradebook()" class="btn"
+                            style="background: var(--accent-color); color: #000; font-size: 0.9em;">
+                            Export Gradebook (.csv)
+                        </button>
+                    </div>
+                    <div style="background: #111; border: 1px solid #333; padding: 10px; border-radius: 4px;">
+                        <table style="width: 100%; border-collapse: collapse; color: #ccc;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid #444; text-align: left;">
+                                    <th style="padding: 8px;">Username</th>
+                                    <th style="padding: 8px;">Email</th>
+                                    <th style="padding: 8px;">Solved At</th>
+                                </tr>
+                            </thead>
+                            <tbody id="solversTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -114,7 +140,10 @@
                 document.getElementById('flagId').value = '';
                 document.getElementById('flagIsFirstBlood').checked = false;
                 document.getElementById('flagFirstBloodBonus').value = 0;
+                document.getElementById('flagIsFirstBlood').checked = false;
+                document.getElementById('flagFirstBloodBonus').value = 0;
                 document.getElementById('deleteBtn').style.display = 'none';
+                document.getElementById('solversSection').style.display = 'none';
             } else {
                 // Edit Mode
                 document.getElementById('editorTitle').textContent = 'Edit Flag: ' + flag.name;
@@ -126,7 +155,46 @@
                 document.getElementById('flagIsFirstBlood').checked = !!flag.is_first_blood;
                 document.getElementById('flagFirstBloodBonus').value = flag.first_blood_bonus || 0;
                 document.getElementById('deleteBtn').style.display = 'block';
+
+                // Load Solvers
+                loadSolvers(flag.id);
             }
+        }
+
+        function loadSolvers(flagId) {
+            const section = document.getElementById('solversSection');
+            const tbody = document.getElementById('solversTableBody');
+
+            section.style.display = 'block';
+            tbody.innerHTML = '<tr><td colspan="3">Loading...</td></tr>';
+
+            fetch('/admin/flags/solvers/' + flagId)
+                .then(res => res.json())
+                .then(users => {
+                    tbody.innerHTML = '';
+                    if (users.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3" style="padding:8px; text-align:center; color:#666;">No solvers yet.</td></tr>';
+                        return;
+                    }
+
+                    users.forEach(u => {
+                        const email = (u.email && u.email.trim() !== '') ? u.email : 'no_email@noemail.net';
+                        const date = new Date(u.timestamp).toLocaleString();
+
+                        const tr = document.createElement('tr');
+                        tr.style.borderBottom = '1px solid #222';
+                        tr.innerHTML = `
+                            <td style="padding: 8px;">${u.username}</td>
+                            <td style="padding: 8px; color: #888;">${email}</td>
+                            <td style="padding: 8px; font-size: 0.9em; color: #666;">${date}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    tbody.innerHTML = '<tr><td colspan="3" style="color:red;">Error loading data</td></tr>';
+                });
         }
 
         document.getElementById('flagForm').addEventListener('submit', async (e) => {
@@ -169,6 +237,12 @@
             });
             loadFlags();
             selectFlag(null);
+        }
+
+        function exportGradebook() {
+            const id = document.getElementById('flagId').value;
+            if (!id) return;
+            window.location.href = `/admin/flags/export_gradebook/${id}`;
         }
 
         loadFlags();

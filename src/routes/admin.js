@@ -15,7 +15,7 @@ router.get('/users', (req, res) => {
 });
 
 router.get('/users/data', (req, res) => {
-    db.all('SELECT id, username, role FROM users', [], (err, rows) => {
+    db.all('SELECT id, username, email, role FROM users', [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
     });
@@ -45,13 +45,21 @@ router.post('/users/delete', (req, res) => {
 
 // Consolidated User Save (Insert or Update)
 router.post('/users/save', async (req, res) => {
-    const { id, username, password, role } = req.body;
+    const { id, username, email, password, role } = req.body;
     const bcrypt = require('bcrypt');
+
+    // Email Validation (Optional but must be valid format if present)
+    if (email && email.trim() !== '') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+    }
 
     if (id) {
         // Update
-        let sql = 'UPDATE users SET username = ?, role = ?';
-        let params = [username, role];
+        let sql = 'UPDATE users SET username = ?, email = ?, role = ?';
+        let params = [username, email, role];
 
         if (password && password.trim() !== '') {
             sql += ', password_hash = ?';
@@ -69,8 +77,8 @@ router.post('/users/save', async (req, res) => {
         if (!password) return res.status(400).json({ error: 'Password required for new user' });
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        db.run('INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)',
-            [username, hashedPassword, role],
+        db.run('INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
+            [username, email, hashedPassword, role],
             (err) => {
                 if (err) return res.status(500).json({ error: err.message });
                 res.json({ success: true });
@@ -175,6 +183,59 @@ router.get('/flags/data', (req, res) => {
     db.all('SELECT * FROM flags', [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
+    });
+});
+
+// Get Solvers for a specific flag
+router.get('/flags/solvers/:flagId', (req, res) => {
+    const { flagId } = req.params;
+    const sql = `
+        SELECT u.username, u.email, s.timestamp
+        FROM users u
+        JOIN submissions s ON u.id = s.user_id
+        WHERE s.flag_id = ?
+        ORDER BY s.timestamp ASC
+    `;
+    db.all(sql, [flagId], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+// Export Gradebook for a specific flag
+router.get('/flags/export_gradebook/:flagId', (req, res) => {
+    const { flagId } = req.params;
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const sql = `
+        SELECT u.email
+        FROM users u
+        JOIN submissions s ON u.id = s.user_id
+        WHERE s.flag_id = ?
+        AND s.timestamp >= ?
+        AND u.email IS NOT NULL
+        AND u.email != ''
+        AND u.email != 'no_email@noemail.net'
+    `;
+
+    db.all(sql, [flagId, sixMonthsAgo.toISOString()], (err, rows) => {
+        if (err) return res.status(500).send(err.message);
+
+        let csvContent = '';
+        rows.forEach(row => {
+            if (row.email && row.email.trim() !== '') {
+                csvContent += `${row.email},100\n`;
+            }
+        });
+
+        // Fetch flag name for filename
+        db.get('SELECT name FROM flags WHERE id = ?', [flagId], (err, flag) => {
+            const filename = flag ? `gradebook-${flag.name.replace(/[^a-z0-9]/gi, '_')}.csv` : 'gradebook.csv';
+            res.setHeader('Content-Type', 'text/csv');
+            res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+            res.send(csvContent);
+        });
     });
 });
 
@@ -289,7 +350,9 @@ router.post('/backup/import', upload.single('backupFile'), (req, res) => {
                 // 3. Restore Flags
                 const stmtFlag = db.prepare('INSERT INTO flags (id, name, value, points, category, description) VALUES (?, ?, ?, ?, ?, ?)');
                 backup.flags.forEach(f => {
-                    stmtFlag.run(f.id, f.name, f.value, f.points, f.category, f.description);
+                    // Check if description exists in backup (backward compatibility)
+                    const description = f.description || null;
+                    stmtFlag.run(f.id, f.name, f.value, f.points, f.category, description);
                 });
                 stmtFlag.finalize();
 
