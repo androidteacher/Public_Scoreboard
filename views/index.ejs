@@ -13,107 +13,112 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 20px;">
-            <!-- Main Leaderboard -->
-            <div style="flex: 2;">
-                <div class="leaderboard-grid">
-                    <!-- Left Column -->
-                    <div>
-                        <table id="table-left">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50px;">#</th>
-                                    <th>Operator</th>
-                                    <th style="width: 80px;">Score</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+        <!-- Search Box -->
+        <div style="flex: 2; margin-bottom: 20px;">
+            <input type="text" id="scoreboardSearch" placeholder="SEARCH OPERATOR..."
+                style="width: 100%; max-width: 400px; font-family: var(--font-mono); font-size: 1rem; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: var(--accent-color); text-transform: uppercase;">
+        </div>
 
-                    <!-- Right Column -->
-                    <div>
-                        <table id="table-right">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50px;">#</th>
-                                    <th>Operator</th>
-                                    <th style="width: 80px;">Score</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+        <!-- Main Leaderboard -->
+        <div style="flex: 2;">
+            <div class="leaderboard-grid">
+                <!-- Left Column -->
+                <div>
+                    <table id="table-left">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>Operator</th>
+                                <th style="width: 80px;">Score</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
 
-                <div class="pagination">
-                    <button id="btn-prev" onclick="changePage(-1)">[ &lt; PREV ]</button>
-                    <span id="page-indicator"
-                        style="align-self: center; font-family: var(--font-mono); color: #888;">PAGE
-                        1</span>
-                    <button id="btn-next" onclick="changePage(1)">[ NEXT &gt; ]</button>
+                <!-- Right Column -->
+                <div>
+                    <table id="table-right">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>Operator</th>
+                                <th style="width: 80px;">Score</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Recent Solves Ticker -->
-            <div style="flex: 1; min-width: 250px; border-left: 1px solid #444; padding-left: 20px;">
-                <h4
-                    style="color: var(--accent-color); text-align: center; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px;">
-                    Recent Solves</h4>
-                <div id="ticker-container"
-                    style="height: 250px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px;">
-                    <div id="ticker-content" style="position: absolute; width: 100%; top: 100%;">
-                        <!-- Populated by JS -->
-                    </div>
-                    <div id="ticker-empty"
-                        style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.8em;">
-                        No solves for 7 days!
-                    </div>
-                </div>
-
-                <!-- First Blood Bonus Section -->
-                <h4
-                    style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
-                    Current First-Blood Bonus Flags</h4>
-                <div id="first-blood-container" style="display: flex; flex-direction: column; gap: 10px;">
-                    <!-- Populated by JS -->
-                </div>
-
-                <!-- First Blood Scroller -->
-                <h4
-                    style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
-                    Current First-Blood Solves
-                </h4>
-                <div id="fb-scroller-container"
-                    style="height: 150px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 5px;">
-                    <div id="fb-scroller-content" style="text-align: left; position: absolute; width: 100%; top: 100%;">
-                        <!-- Populated by JS -->
-                    </div>
-                    <div id="fb-scroller-empty"
-                        style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.9em;">
-                        No first-blood solves!
-                    </div>
-                </div>
-
-                <style>
-                    @keyframes fb-scroll {
-                        0% {
-                            transform: translateX(0);
-                        }
-
-                        100% {
-                            transform: translateX(-100%);
-                        }
-                    }
-                </style>
+            <div class="pagination">
+                <button id="btn-prev" onclick="changePage(-1)">[ &lt; PREV ]</button>
+                <span id="page-indicator" style="align-self: center; font-family: var(--font-mono); color: #888;">PAGE
+                    1</span>
+                <button id="btn-next" onclick="changePage(1)">[ NEXT &gt; ]</button>
             </div>
         </div>
+
+        <!-- Recent Solves Ticker -->
+        <div style="flex: 1; min-width: 250px; border-left: 1px solid #444; padding-left: 20px;">
+            <h4
+                style="color: var(--accent-color); text-align: center; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px;">
+                Recent Solves</h4>
+            <div id="ticker-container"
+                style="height: 250px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px;">
+                <div id="ticker-content" style="position: absolute; width: 100%; top: 100%;">
+                    <!-- Populated by JS -->
+                </div>
+                <div id="ticker-empty"
+                    style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.8em;">
+                    No solves for 7 days!
+                </div>
+            </div>
+
+            <!-- First Blood Bonus Section -->
+            <h4
+                style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
+                Current First-Blood Bonus Flags</h4>
+            <div id="first-blood-container" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- First Blood Scroller -->
+            <h4
+                style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
+                Current First-Blood Solves
+            </h4>
+            <div id="fb-scroller-container"
+                style="height: 150px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 5px;">
+                <div id="fb-scroller-content" style="text-align: left; position: absolute; width: 100%; top: 100%;">
+                    <!-- Populated by JS -->
+                </div>
+                <div id="fb-scroller-empty"
+                    style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.9em;">
+                    No first-blood solves!
+                </div>
+            </div>
+
+            <style>
+                @keyframes fb-scroll {
+                    0% {
+                        transform: translateX(0);
+                    }
+
+                    100% {
+                        transform: translateX(-100%);
+                    }
+                }
+            </style>
+        </div>
+    </div>
     </div>
 
     <script>
         let allUsers = [];
+        let filteredUsers = [];
         let currentPage = 1;
         const itemsPerPage = 60; // 30 per column
 
@@ -122,9 +127,18 @@
             .then(res => res.json())
             .then(data => {
                 allUsers = data;
+                filteredUsers = data; // Initialize filtered list
                 renderPage();
             })
             .catch(err => console.error("Uplink Failed:", err));
+
+        // Search Logic
+        document.getElementById('scoreboardSearch').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            filteredUsers = allUsers.filter(user => user.username.toLowerCase().includes(query));
+            currentPage = 1; // Reset to first page
+            renderPage();
+        });
 
         // Ticker Fetch
         fetch('/api/recent')
@@ -276,7 +290,7 @@
         function renderPage() {
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
-            const pageData = allUsers.slice(start, end);
+            const pageData = filteredUsers.slice(start, end);
 
             const midPoint = Math.ceil(pageData.length / 2);
             const leftData = pageData.slice(0, midPoint);
@@ -286,9 +300,9 @@
             renderTable(document.querySelector('#table-right tbody'), rightData, start + midPoint);
 
             // Update Controls
-            document.getElementById('page-indicator').textContent = `PAGE ${currentPage} / ${Math.ceil(allUsers.length / itemsPerPage) || 1}`;
+            document.getElementById('page-indicator').textContent = `PAGE ${currentPage} / ${Math.ceil(filteredUsers.length / itemsPerPage) || 1}`;
             document.getElementById('btn-prev').disabled = currentPage === 1;
-            document.getElementById('btn-next').disabled = end >= allUsers.length;
+            document.getElementById('btn-next').disabled = end >= filteredUsers.length;
         }
 
         function renderTable(tbody, data, startIndex) {
