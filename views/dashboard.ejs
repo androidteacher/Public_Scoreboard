@@ -53,21 +53,47 @@
     </div>
 
     <div class="card">
-        <h2>Solved Flags</h2>
-        <table id="solvedFlagsTable">
-            <thead>
-                <tr>
-                    <th>Flag Name</th>
-                    <th>Points</th>
-                    <th>Date Solved</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="3">Loading...</td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="display: flex; gap: 1rem; border-bottom: 2px solid #222; margin-bottom: 1rem;">
+            <h2 id="tabSolved" class="tab active-tab" onclick="switchTab('solved')"
+                style="cursor: pointer; margin-bottom: 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--accent-color); color: var(--accent-color);">
+                Solved Flags</h2>
+            <h2 id="tabUnsolved" class="tab" onclick="switchTab('unsolved')"
+                style="cursor: pointer; margin-bottom: 0; padding-bottom: 0.5rem; border-bottom: 2px solid transparent; color: #666;">
+                Unsolved Flags</h2>
+        </div>
+
+        <div id="solvedSection">
+            <table id="solvedFlagsTable">
+                <thead>
+                    <tr>
+                        <th>Flag Name</th>
+                        <th>Points</th>
+                        <th>Date Solved</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="unsolvedSection" style="display: none;">
+            <table id="unsolvedFlagsTable">
+                <thead>
+                    <tr>
+                        <th>Flag Name</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -90,9 +116,39 @@
 
             if (data.success) {
                 loadSolvedFlags(); // Refresh list
+                loadUnsolvedFlags(); // Refresh unsolved list too
                 document.getElementById('flagInput').value = '';
             }
         });
+
+        function switchTab(tab) {
+            const solvedSec = document.getElementById('solvedSection');
+            const unsolvedSec = document.getElementById('unsolvedSection');
+            const tabSolved = document.getElementById('tabSolved');
+            const tabUnsolved = document.getElementById('tabUnsolved');
+
+            if (tab === 'solved') {
+                solvedSec.style.display = 'block';
+                unsolvedSec.style.display = 'none';
+
+                tabSolved.style.color = 'var(--accent-color)';
+                tabSolved.style.borderBottomColor = 'var(--accent-color)';
+
+                tabUnsolved.style.color = '#666';
+                tabUnsolved.style.borderBottomColor = 'transparent';
+            } else {
+                solvedSec.style.display = 'none';
+                unsolvedSec.style.display = 'block';
+
+                tabSolved.style.color = '#666';
+                tabSolved.style.borderBottomColor = 'transparent';
+
+                tabUnsolved.style.color = 'var(--accent-color)';
+                tabUnsolved.style.borderBottomColor = 'var(--accent-color)';
+
+                loadUnsolvedFlags();
+            }
+        }
 
         // Load Solved Flags
         function loadSolvedFlags() {
@@ -112,6 +168,28 @@
                         <td>${sub.name}</td>
                         <td>${sub.points}</td>
                         <td>${date}</td>
+                    `;
+                        tbody.appendChild(tr);
+                    });
+                });
+        }
+
+        // Load Unsolved Flags
+        function loadUnsolvedFlags() {
+            fetch('/api/user/unsolved')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#unsolvedFlagsTable tbody');
+                    tbody.innerHTML = '';
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="2">You have solved ALL flags! Amazing!</td></tr>';
+                        return;
+                    }
+                    data.forEach(flag => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                        <td style="color: #888;">${flag.name}</td>
+                        <td>${flag.points}</td>
                     `;
                         tbody.appendChild(tr);
                     });

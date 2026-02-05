@@ -111,6 +111,18 @@ router.get('/user/solved', isAuthenticated, (req, res) => {
     });
 });
 
+// User Unsolved Flags
+router.get('/user/unsolved', isAuthenticated, (req, res) => {
+    const userId = req.session.userId;
+    db.all(`
+        SELECT * FROM flags 
+        WHERE id NOT IN (SELECT flag_id FROM submissions WHERE user_id = ?)
+    `, [userId], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 // Recent Solves Ticker
 router.get('/recent', (req, res) => {
     const sql = `
