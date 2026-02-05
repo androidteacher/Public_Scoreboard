@@ -18,12 +18,23 @@
     <header>
         <div class="brand">CYBER RANGE <span style="color:var(--text-primary)">//</span> SCOREBOARD</div>
         <nav>
-            <a href="/">Leaderboard</a>
-            <a href="/stats">Statistics</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle">Scoreboard/Flags &#9662;</a>
+                <div class="dropdown-content">
+                    <a href="/">Leaderboard</a>
+                    <a href="/stats">Statistics</a>
+                    <a href="/unsolved">Unsolved Flags</a>
+                </div>
+            </div>
             <% if (typeof user !=='undefined' && user.userId) { %>
-                <a href="/dashboard">Dashboard</a>
-                <a href="#" onclick="openEmailModal(); return false;">Set Email</a>
-                <a href="/change-password">Change Password</a>
+                <a href="/dashboard" class="nav-highlight">Submit Flag</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">My Profile &#9662;</a>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="openEmailModal(); return false;">Set Email</a>
+                        <a href="/change-password">Change Password</a>
+                    </div>
+                </div>
                 <% if (user.role==='admin' ) { %>
                     <a href="/admin/dashboard">Admin</a>
                     <% } %>

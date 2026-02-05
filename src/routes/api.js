@@ -60,33 +60,37 @@ router.post('/submit', isAuthenticated, (req, res) => {
         db.get('SELECT * FROM submissions WHERE user_id = ? AND flag_id = ?', [userId, flag.id], (err, sub) => {
             if (sub) return res.json({ success: false, message: 'Already Solved' });
 
-            // Record submission
-            // Record submission
-            const totalPoints = flag.points + (flag.is_first_blood ? flag.first_blood_bonus : 0);
+            // check if anyone else has solved it (First Blood Check)
+            db.get('SELECT COUNT(*) as count FROM submissions WHERE flag_id = ?', [flag.id], (err, row) => {
+                const solveCount = row ? row.count : 0;
+                const isFirstBlood = solveCount === 0;
+                const firstBloodBonus = 200; // Fixed 200 point bonus
 
-            db.serialize(() => {
-                db.run('INSERT INTO submissions (user_id, flag_id, points_awarded) VALUES (?, ?, ?)',
-                    [userId, flag.id, flag.points],
-                    (err) => {
-                        if (err) return res.status(500).json({ error: 'Database error' });
+                // Record submission
+                db.serialize(() => {
+                    db.run('INSERT INTO submissions (user_id, flag_id, points_awarded) VALUES (?, ?, ?)',
+                        [userId, flag.id, flag.points],
+                        (err) => {
+                            if (err) return res.status(500).json({ error: 'Database error' });
 
-                        if (flag.is_first_blood && flag.first_blood_bonus > 0) {
-                            db.run('INSERT INTO bonus_points (user_id, points, reason) VALUES (?, ?, ?)',
-                                [userId, flag.first_blood_bonus, `First Blood: ${flag.name}`],
-                                (err) => {
-                                    if (err) console.error("Error awarding first blood bonus:", err);
-                                    res.json({
-                                        success: true,
-                                        message: `Flag Solved! +${flag.points} points` +
-                                            (flag.is_first_blood ? `\nFIRST BLOOD BONUS! +${flag.first_blood_bonus} points` : '')
-                                    });
-                                }
-                            );
-                        } else {
-                            res.json({ success: true, message: `Flag Solved! +${flag.points} points` });
+                            if (isFirstBlood) {
+                                db.run('INSERT INTO bonus_points (user_id, points, reason) VALUES (?, ?, ?)',
+                                    [userId, firstBloodBonus, `First Blood: ${flag.name}`],
+                                    (err) => {
+                                        if (err) console.error("Error awarding first blood bonus:", err);
+                                        res.json({
+                                            success: true,
+                                            message: `Flag Solved! +${flag.points} points` +
+                                                `\nFIRST BLOOD BONUS! +${firstBloodBonus} points`
+                                        });
+                                    }
+                                );
+                            } else {
+                                res.json({ success: true, message: `Flag Solved! +${flag.points} points` });
+                            }
                         }
-                    }
-                );
+                    );
+                });
             });
         });
     });

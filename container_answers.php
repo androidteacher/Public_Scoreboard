@@ -1,0 +1,137 @@
+<?php
+
+$logfile = 'flag_rec.csv';
+$xfile = 'demo_scoresx.csv';
+$rightpass = "secret";
+
+$description = "<h2 align='center'> Pen Test Subnet Leaderboard</h2>";
+
+//$removes = array("A", "B" ); # text to remove from score labels
+
+$poss_chals = array("Flag_1", "Flag_2","Flag_3", "Flag_4","Flag_5","Flag_6","Flag_7","Flag_8","Flag_9","Flag_A","Flag_B","Flag_C","Flag_D","Flag_E","Flag_F", "Flag_G","Flag_H","Flag_J","Flag_K","Flag_L","Flag_M","Flag_N","Flag_O", "Flag_P","Flag_Q","Flag_R","Flag_S","Flag_T","Flag_U","Flag_W","Flag_Y","Red1","Red2","Red3","Red4","Red5","Red6","Red7","Red8","Red9","Red12","Red13","Red14","Red15","Red16","Red17","Red18","Red19","Red20","Red21","Red22", "Red23","Red24","Red25","Red26","Red27","Red28","Red29","Red30","Red31","Red32","Red33","Red34","Red35","Red36","Red37","Red38","Red39","Red40","Red41", "Red42","Red43","Red44","Red45","Red46","Red47","Red48","Red49","Red50","Red51","Red52","Red53","Red54","Red55","Red56","Red57","Red58","Red59","Red60","Red61","Red62","Red63","Red64","Arena1","Arena2","Arena3","Arena4","Arena5","EasterEgg1","EasterEgg2","EasterEgg3","EasterEgg4","EasterEgg5","EasterEgg6","EasterEgg7","EasterEgg8","EasterEgg9","EasterEgg10","EasterEgg11","EasterEgg12","EasterEgg13","BREAK"
+
+);
+
+$correct_answers = array(
+  	array( "Flag_1", "FLAG-LFIEASY", 50),
+	array( "Flag_2", "Flag-RFIHTML", 100 ),
+	array( "Flag_3", "Flag-RFIEVILSMB", 250 ),
+	array( "Flag_4", "Flag-NotifyM3", 170 ),
+	array( "Flag_5", "Flag-SQL777", 200 ),
+	array( "Flag_6", "Flag-3scape", 250 ),
+	array( "Flag_7", "Flag-PharZip", 170 ),
+	array( "Flag_8", "Flag-GitCommit999", 120 ),
+	array( "Flag_9", "Flag-CookieBrute9", 120 ),
+	array( "Flag_A", "Flag-NO-NTLM", 130 ),
+	array( "Flag_B", "Flag-EasyPop", 150 ),CTF{CVE-2026-24061-R00T-SHELL}
+	array( "Flag_C", "Flag-RogerYoung", 70 ),
+	array( "Flag_D", "FLAg-ModCgiShell", 300 ),
+	array( "Flag_E", "FLAG-Tunn3l", 125 ),
+	array( "Flag_F", "FLAG-ZONEXFR", 120 ),
+	array( "Flag_G", "FLAG-Py64", 115 ),
+	array( "Flag_H", "Flag_Brut3SSH", 110 ),
+	array( "Flag_J", "FLag-SSTI", 120 ),
+	array( "Flag_K", "Flag-Base64Pop", 110 ),
+	array( "Flag_L", "Flag-Burp123", 110 ),
+	array( "Flag_M", "Flag-MS10-17", 115 ),
+	array( "Flag_N", "Flag-MIMEType", 115 ),
+	array( "Flag_O", "Flag-inject1", 110 ),
+	array( "Flag_P", "FLag-PhPD3S", 115 ),
+	array( "Flag_Q", "Flag-SSRF127", 115 ),
+	array( "Flag_R", "Flag-msfcustom", 125 ),
+	array( "Flag_S", "Flag-HazUrData", 500 ),
+	array( "Flag_T", "Flag-KungFuStrong", 140 ),
+	array( "Flag_U", "Flag-YouGotCred", 120 ),
+        array( "Flag_W", "Flag-WPVULN", 155 ),
+	array( "Flag_Y", "Flag-PreAuth", 135 ),
+	array( "Red1", "Flag-UserAg3nt", 115 ),
+	array( "Red2", "Flag-AdminCookie", 110 ),
+	array( "Red3", "Flag-Brut3Force", 110 ),
+	array( "Red4", "gatorade3", 220 ),
+	array( "Red5", "Flag-3sceL8", 180 ),
+	array( "Red6", "Flag-PAM-Deny-Red6-Success", 115 ),
+	array( "Red7", "Flag-BackStr33tBoyz", 150 ),
+	array( "Red8", "017databaseaku", 150 ),
+	array( "Red9", "Flag-CVE2018-19422Su3brion", 100 ),
+	array( "Red12", "Flag-RemoteDB123", 175 ),
+	array( "Red13", "Flag-3ScapeMe451", 125 ),
+	array( "Red14", "FLAG-Tunn3lShock9", 90 ),
+	array( "Red15", "Flag-C3ntr4lP3rk", 90 ),
+	array( "Red16", "FLAG-KRBSECURENTI23", 90 ),
+	array( "Red17", "Flag-B00MStick", 100 ),
+	array( "Red18", "FLAG-QUERY-GRAPHIX", 75 ),
+	array( "Red19", "FLAG-P3ARF3Ction", 75 ),
+	array( "Red20", "Flag-Tim3out", 75 ),
+	array( "Red21", "Flag-Simpl3CVE", 30 ),
+	array( "Red22", "FLAG-OktaHack23", 50 ),
+	array( "Red23", "FLAG-IceIceBaby", 50 ),
+	array( "Red24", "Flag-JWTS3cret", 50 ),
+	array( "Red25", "Flag-403ByPAZZ", 90 ),
+	array( "Red26", "Flag-CookieThief", 100 ),
+	array( "Red27", "Flag-CORSCoMpLete", 150 ),
+	array( "Red28", "Flag-Sym2Zip971", 100 ),
+	array( "Red29", "Flag-Advanc3dSQL5", 150 ),
+	array( "Red30", "Flag-LigoloFTW2024", 125 ),
+	array( "Red31", "Flag-J3nkinsLFI", 250 ),
+	array( "Red32", "Flag-YouAr3InClud3d2", 500 ),
+	array( "Red33", "Flag-FstenY0urSetbelt", 2000 ),
+	array( "Red34", "Flag-AceAbus3Ftw", 1500 ),      
+	array( "Red35", "Flag-NTLMTH13F", 300 ),      
+	array( "Red36", "Flag-G3TAR0UndR0undR0uND", 300 ),      
+	array( "Red37", "Flag-D0ubleP1votFTW", 700 ),      
+	array( "Red38", "Flag-InTh3C0mments", 800 ),      
+	array( "Red39", "Flag-Fr0ntEndVal1dat3", 350 ),      
+	array( "Red40", "Flag-XX3FuZZ3r", 300 ),      
+	array( "Red41", "Flag-M1m1k8tzCrack", 300 ),      
+	array( "Red42", "Flag-P3Rs3V3r3", 600 ),      
+	array( "Red43", "Flag-Te3MC1t332024", 500 ),      
+	array( "Red44", "Flag-J1ggyJuggl3r", 700 ),      
+	array( "Red45", "Flag-R0undcub3Lf1", 500 ),      
+	array( "Red46", "Flag-DNSH3r02024", 300 ),      
+	array( "Red47", "Flag-Log4Shell-RCE-Success", 1500 ),      
+	array( "Red48", "Flag-SQL0utF1le", 1000 ),      
+	array( "Red49", "Flag-ID0rF0unD55", 750 ),      
+	array( "Red50", "Flag-Cr0ssF1reHurr1can3", 2500 ),      
+	array( "Red51", "Flag-7xH9vQkX23z2LgT", 1200 ),      
+	array( "Red52", "flag-xY7z9QpL2sVw", 1500 ),      
+	array( "Red53", "Flag-Red53WikiXSS", 1200 ),      
+	array( "Red54", "Flag-C3ar4alH3ck24", 1000 ),      
+	array( "Red55", "Flag-cab347a6e674b882c33a8ebc334201c3", 1400 ),      
+	array( "Red56", "Flag-9df60cfbc825ff3dd61d2c77ad0f2a57", 1000 ),      
+	array( "Red57", "Flag-NextMiddlewareBypass2025", 2500 ),      
+	array( "Red58", "Flag-cfe7ef35aa68052ce715d89af833df2b", 2000 ),      
+	array( "Red59", "Flag-CtfD4Tw#4", 1500 ),      
+	array( "Red60", "flag-9f3cA7dE2bKqM8VxW4Jr0HnP", 500 ),      
+	array( "Red61", "Flag-8e4b2a9", 500 ),      
+	array( "Red62", "CTF{CVE-2026-24061-R00T-SHELL}", 200 ),
+	array( "Red63", "Flag-1d645bb338b55adb4c13e39fdce5470", 200 ),
+	array( "Red64", "Flag-120aa10fbb4f66d2e70552da52413907", 200 ),      
+	array( "Arena1", "Flag-Are3NaChamp", 300 ),
+	array( "Arena2", "Arena2-MassAssignMe123", 200 ),
+	array( "Arena3", "Arena3_SUP3RFast4Sure", 700 ),      
+	array( "Arena4", "Flag-c00lCat", 2500 ),      
+	array( "Arena5", "Flag-XX3Lf1FtW", 1200 ),      
+	array( "EasterEgg1", "Flag-iCSI-SYSVOL", 50 ),
+	array( "EasterEgg2", "Flag-biNwAlk2", 45 ),
+	array( "EasterEgg3", "Flag-SpaceKitty", 30 ),
+	array( "EasterEgg4", "Flag-ElnaemeDnFgoaritam", 50 ),
+	array( "EasterEgg5", "Flag-Interc3ptM3", 40 ),
+	array( "EasterEgg6", "Flag-SimpleSt3g", 20 ),
+	array( "EasterEgg7", "Flag-Triple3ncode", 40 ),
+	array( "EasterEgg8", "Flag-Not3Pad4Sle", 150 ),
+	array( "EasterEgg9", "Flag-Adm1nF0und", 400 ),
+	array( "EasterEgg10", "Flag-3ast3r3gg1064", 250 ),
+	array( "EasterEgg11", "flag-3ggHUnt3r2024", 75 ),
+	array( "EasterEgg12", "Flag-IAmARobot", 50 ),
+	array( "EasterEgg13", "Flag-gNagk5M3LZBg", 75 ),
+	array( "EasterEgg13", "CTF{CVE-2026-24061-R00T-SHELL}", 250),
+	
+
+	
+
+  
+	   
+
+); 
+
+?>
