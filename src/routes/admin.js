@@ -202,24 +202,18 @@ router.get('/flags/solvers/:flagId', (req, res) => {
     });
 });
 
-// Export Gradebook for a specific flag
 router.get('/flags/export_gradebook/:flagId', (req, res) => {
     const { flagId } = req.params;
-    const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
     const sql = `
         SELECT u.email
         FROM users u
         JOIN submissions s ON u.id = s.user_id
         WHERE s.flag_id = ?
-        AND s.timestamp >= ?
-        AND u.email IS NOT NULL
-        AND u.email != ''
-        AND u.email != 'no_email@noemail.net'
+        AND u.email LIKE '%@stu.neisd.net'
     `;
 
-    db.all(sql, [flagId, sixMonthsAgo.toISOString()], (err, rows) => {
+    db.all(sql, [flagId], (err, rows) => {
         if (err) return res.status(500).send(err.message);
 
         let csvContent = '';
