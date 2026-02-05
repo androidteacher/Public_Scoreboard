@@ -1,155 +1,153 @@
 <%- include('partials/header') %>
 
     <div class="card glow-card crt" style="position: relative; overflow: hidden; min-height: 80vh;">
-        <div class="card glow-card crt" style="position: relative; overflow: hidden; min-height: 80vh;">
-            <div
-                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #222; padding-bottom: 1rem;">
-                <h2 class="glitch" data-text="iCSI Cyber Range Leaderboard"
-                    style="border: none; margin: 0; padding: 0;">iCSI Cyber Range Leaderboard</h2>
-                <div style="text-align: right; font-family: var(--font-mono); color: #888;">
-                    <span
-                        style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8em; margin-right: 10px;">Most
-                        Solves Today:</span>
-                    <span id="daily-top-solver" style="color: #666;">--</span>
-                </div>
-            </div>
 
-            <div style="display: flex; gap: 20px;">
-                <!-- Main Leaderboard -->
-                <div style="flex: 2;">
-                    <div class="leaderboard-grid">
-                        <!-- Left Column -->
-                        <div>
-                            <table id="table-left">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50px;">#</th>
-                                        <th>Operator</th>
-                                        <th style="width: 80px;">Score</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-
-                        <!-- Right Column -->
-                        <div>
-                            <table id="table-right">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50px;">#</th>
-                                        <th>Operator</th>
-                                        <th style="width: 80px;">Score</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="pagination">
-                        <button id="btn-prev" onclick="changePage(-1)">[ &lt; PREV ]</button>
-                        <span id="page-indicator"
-                            style="align-self: center; font-family: var(--font-mono); color: #888;">PAGE
-                            1</span>
-                        <button id="btn-next" onclick="changePage(1)">[ NEXT &gt; ]</button>
-                    </div>
-                </div>
-
-                <!-- Recent Solves Ticker -->
-                <div style="flex: 1; min-width: 250px; border-left: 1px solid #444; padding-left: 20px;">
-                    <h4
-                        style="color: var(--accent-color); text-align: center; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px;">
-                        Recent Solves</h4>
-                    <div id="ticker-container"
-                        style="height: 250px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px;">
-                        <div id="ticker-content" style="position: absolute; width: 100%; top: 100%;">
-                            <!-- Populated by JS -->
-                        </div>
-                        <div id="ticker-empty"
-                            style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.8em;">
-                            No solves for 7 days!
-                        </div>
-                    </div>
-
-                    <!-- First Blood Bonus Section -->
-                    <h4
-                        style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
-                        Current First-Blood Bonus Flags</h4>
-                    <div id="first-blood-container" style="display: flex; flex-direction: column; gap: 10px;">
-                        <!-- Populated by JS -->
-                    </div>
-
-                    <!-- First Blood Scroller -->
-                    <h4
-                        style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
-                        Current First-Blood Solves
-                    </h4>
-                    <div id="fb-scroller-container"
-                        style="height: 150px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 5px;">
-                        <div id="fb-scroller-content"
-                            style="text-align: left; position: absolute; width: 100%; top: 100%;">
-                            <!-- Populated by JS -->
-                        </div>
-                        <div id="fb-scroller-empty"
-                            style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.9em;">
-                            No first-blood solves!
-                        </div>
-                    </div>
-
-                    <style>
-                        @keyframes fb-scroll {
-                            0% {
-                                transform: translateX(0);
-                            }
-
-                            100% {
-                                transform: translateX(-100%);
-                            }
-                        }
-                    </style>
-                </div>
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #222; padding-bottom: 1rem;">
+            <h2 class="glitch" data-text="iCSI Cyber Range Leaderboard" style="border: none; margin: 0; padding: 0;">
+                iCSI Cyber Range Leaderboard</h2>
+            <div style="text-align: right; font-family: var(--font-mono); color: #888;">
+                <span style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8em; margin-right: 10px;">Most
+                    Solves Today:</span>
+                <span id="daily-top-solver" style="color: #666;">--</span>
             </div>
         </div>
 
-        <script>
-            let allUsers = [];
-            let currentPage = 1;
-            const itemsPerPage = 60; // 30 per column
+        <div style="display: flex; gap: 20px;">
+            <!-- Main Leaderboard -->
+            <div style="flex: 2;">
+                <div class="leaderboard-grid">
+                    <!-- Left Column -->
+                    <div>
+                        <table id="table-left">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Operator</th>
+                                    <th style="width: 80px;">Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
 
-            // Initial Fetch
-            fetch('/api/scoreboard')
-                .then(res => res.json())
-                .then(data => {
-                    allUsers = data;
-                    renderPage();
-                })
-                .catch(err => console.error("Uplink Failed:", err));
+                    <!-- Right Column -->
+                    <div>
+                        <table id="table-right">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Operator</th>
+                                    <th style="width: 80px;">Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
 
-            // Ticker Fetch
-            fetch('/api/recent')
-                .then(res => res.json())
-                .then(data => {
-                    const container = document.getElementById('ticker-content');
-                    const empty = document.getElementById('ticker-empty');
+                <div class="pagination">
+                    <button id="btn-prev" onclick="changePage(-1)">[ &lt; PREV ]</button>
+                    <span id="page-indicator"
+                        style="align-self: center; font-family: var(--font-mono); color: #888;">PAGE
+                        1</span>
+                    <button id="btn-next" onclick="changePage(1)">[ NEXT &gt; ]</button>
+                </div>
+            </div>
 
-                    if (data.length === 0) {
-                        empty.style.display = 'block';
-                        return;
+            <!-- Recent Solves Ticker -->
+            <div style="flex: 1; min-width: 250px; border-left: 1px solid #444; padding-left: 20px;">
+                <h4
+                    style="color: var(--accent-color); text-align: center; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px;">
+                    Recent Solves</h4>
+                <div id="ticker-container"
+                    style="height: 250px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px;">
+                    <div id="ticker-content" style="position: absolute; width: 100%; top: 100%;">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div id="ticker-empty"
+                        style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.8em;">
+                        No solves for 7 days!
+                    </div>
+                </div>
+
+                <!-- First Blood Bonus Section -->
+                <h4
+                    style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
+                    Current First-Blood Bonus Flags</h4>
+                <div id="first-blood-container" style="display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- First Blood Scroller -->
+                <h4
+                    style="color: var(--danger-color, #ff0055); text-align: center; margin-top: 25px; margin-bottom: 15px; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; border-top: 1px solid #333; padding-top: 20px;">
+                    Current First-Blood Solves
+                </h4>
+                <div id="fb-scroller-container"
+                    style="height: 150px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3); border-radius: 4px; padding: 5px;">
+                    <div id="fb-scroller-content" style="text-align: left; position: absolute; width: 100%; top: 100%;">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div id="fb-scroller-empty"
+                        style="display:none; text-align: center; padding-top: 40%; color: #666; font-size: 0.9em;">
+                        No first-blood solves!
+                    </div>
+                </div>
+
+                <style>
+                    @keyframes fb-scroll {
+                        0% {
+                            transform: translateX(0);
+                        }
+
+                        100% {
+                            transform: translateX(-100%);
+                        }
                     }
+                </style>
+            </div>
+        </div>
+    </div>
 
-                    data.forEach(solve => {
-                        const el = document.createElement('div');
-                        el.style.padding = '8px';
-                        el.style.borderBottom = '1px solid #333';
-                        // SQLite returns "YYYY-MM-DD HH:MM:SS" which browsers parse as local. 
-                        // We must treat it as UTC.
-                        const utcDate = new Date(solve.timestamp.replace(' ', 'T') + 'Z');
-                        const date = utcDate.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit' });
+    <script>
+        let allUsers = [];
+        let currentPage = 1;
+        const itemsPerPage = 60; // 30 per column
 
-                        el.innerHTML = `
+        // Initial Fetch
+        fetch('/api/scoreboard')
+            .then(res => res.json())
+            .then(data => {
+                allUsers = data;
+                renderPage();
+            })
+            .catch(err => console.error("Uplink Failed:", err));
+
+        // Ticker Fetch
+        fetch('/api/recent')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('ticker-content');
+                const empty = document.getElementById('ticker-empty');
+
+                if (data.length === 0) {
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                data.forEach(solve => {
+                    const el = document.createElement('div');
+                    el.style.padding = '8px';
+                    el.style.borderBottom = '1px solid #333';
+                    // SQLite returns "YYYY-MM-DD HH:MM:SS" which browsers parse as local. 
+                    // We must treat it as UTC.
+                    const utcDate = new Date(solve.timestamp.replace(' ', 'T') + 'Z');
+                    const date = utcDate.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit' });
+
+                    el.innerHTML = `
                         <div style="color: var(--accent-color); font-size: 0.9em;"><b>${solve.username}</b></div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #bbb;">
                             <span>${solve.flag_name}</span>
@@ -157,74 +155,74 @@
                         </div>
                         <div style="font-size: 0.7em; color: #555; text-align: right;">${date}</div>
                     `;
-                        container.appendChild(el);
-                    });
+                    container.appendChild(el);
+                });
 
-                    // Ticker Animation
-                    const trackHeight = container.offsetHeight;
-                    const viewHeight = 250;
+                // Ticker Animation
+                const trackHeight = container.offsetHeight;
+                const viewHeight = 250;
 
-                    let currentTop = viewHeight;
-                    function tick() {
-                        currentTop -= 0.5; // Slower speed
-                        if (currentTop < -trackHeight) {
-                            currentTop = viewHeight;
-                        }
-                        container.style.top = currentTop + 'px';
-                        requestAnimationFrame(tick);
+                let currentTop = viewHeight;
+                function tick() {
+                    currentTop -= 0.5; // Slower speed
+                    if (currentTop < -trackHeight) {
+                        currentTop = viewHeight;
                     }
+                    container.style.top = currentTop + 'px';
+                    requestAnimationFrame(tick);
+                }
 
-                    if (trackHeight > 0) tick();
-                })
-                .catch(err => console.error("Ticker Failed:", err));
+                if (trackHeight > 0) tick();
+            })
+            .catch(err => console.error("Ticker Failed:", err));
 
-            // First Blood Fetch
-            fetch('/api/first-blood')
-                .then(res => res.json())
-                .then(data => {
-                    const container = document.getElementById('first-blood-container');
-                    if (data.length === 0) {
-                        container.innerHTML = '<div style="text-align: center; color: #666; font-size: 0.8em;">No active first blood bonuses.</div>';
-                        return;
-                    }
+        // First Blood Fetch
+        fetch('/api/first-blood')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('first-blood-container');
+                if (data.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #666; font-size: 0.8em;">No active first blood bonuses.</div>';
+                    return;
+                }
 
-                    data.forEach(flag => {
-                        const el = document.createElement('div');
-                        el.style.padding = '10px';
-                        el.style.background = 'rgba(255, 0, 85, 0.1)';
-                        el.style.border = '1px solid var(--danger-color, #ff0055)';
-                        el.style.borderRadius = '4px';
-                        el.innerHTML = `
+                data.forEach(flag => {
+                    const el = document.createElement('div');
+                    el.style.padding = '10px';
+                    el.style.background = 'rgba(255, 0, 85, 0.1)';
+                    el.style.border = '1px solid var(--danger-color, #ff0055)';
+                    el.style.borderRadius = '4px';
+                    el.innerHTML = `
                         <div style="font-weight: bold; color: var(--danger-color, #ff0055);">${flag.name}</div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.85em; margin-top: 5px;">
                             <span style="color: #ccc;">${flag.points}pts</span>
                             <span style="color: #fff; font-weight: bold;">+${flag.first_blood_bonus} BONUS</span>
                         </div>
                     `;
-                        container.appendChild(el);
-                    });
-                })
-                .catch(err => console.error("First Blood Failed:", err));
+                    container.appendChild(el);
+                });
+            })
+            .catch(err => console.error("First Blood Failed:", err));
 
-            // First Blood Solves Scroller
-            fetch('/api/first-blood-solves')
-                .then(res => res.json())
-                .then(data => {
-                    const container = document.getElementById('fb-scroller-content');
-                    const empty = document.getElementById('fb-scroller-empty');
-                    const wrapper = document.getElementById('fb-scroller-container');
+        // First Blood Solves Scroller
+        fetch('/api/first-blood-solves')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('fb-scroller-content');
+                const empty = document.getElementById('fb-scroller-empty');
+                const wrapper = document.getElementById('fb-scroller-container');
 
-                    if (data.length === 0) {
-                        empty.style.display = 'block';
-                        return;
-                    }
+                if (data.length === 0) {
+                    empty.style.display = 'block';
+                    return;
+                }
 
-                    data.forEach(entry => {
-                        const el = document.createElement('div');
-                        el.style.padding = '8px';
-                        el.style.borderBottom = '1px solid rgba(255, 0, 85, 0.2)';
+                data.forEach(entry => {
+                    const el = document.createElement('div');
+                    el.style.padding = '8px';
+                    el.style.borderBottom = '1px solid rgba(255, 0, 85, 0.2)';
 
-                        el.innerHTML = `
+                    el.innerHTML = `
                         <div style="color: var(--danger-color, #ff0055); font-size: 0.9em;"><b>${entry.username}</b></div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #bbb;">
                             <span>${entry.flag_name}</span>
@@ -232,79 +230,79 @@
                         </div>
                         <div style="font-size: 0.7em; color: #ff5555; text-align: right; opacity: 0.7;">FIRST BLOOD</div>
                     `;
-                        container.appendChild(el);
-                    });
+                    container.appendChild(el);
+                });
 
-                    // Vertical Scroll Logic
-                    const trackHeight = container.offsetHeight;
-                    const viewHeight = 150;
-                    let currentTop = viewHeight;
+                // Vertical Scroll Logic
+                const trackHeight = container.offsetHeight;
+                const viewHeight = 150;
+                let currentTop = viewHeight;
 
-                    if (trackHeight > viewHeight) {
-                        function tick() {
-                            currentTop -= 0.5;
-                            if (currentTop < -trackHeight) {
-                                currentTop = viewHeight;
-                            }
-                            container.style.top = currentTop + 'px';
-                            requestAnimationFrame(tick);
+                if (trackHeight > viewHeight) {
+                    function tick() {
+                        currentTop -= 0.5;
+                        if (currentTop < -trackHeight) {
+                            currentTop = viewHeight;
                         }
-                        tick();
-                    } else {
-                        // Center content if it fits
-                        container.style.top = '0';
-                        container.style.position = 'relative';
-                        container.style.height = '100%';
-                        container.style.display = 'flex';
-                        container.style.flexDirection = 'column';
-                        container.style.justifyContent = 'center';
+                        container.style.top = currentTop + 'px';
+                        requestAnimationFrame(tick);
                     }
-                })
-                .catch(err => console.error("First Blood Solves Failed:", err));
+                    tick();
+                } else {
+                    // Center content if it fits
+                    container.style.top = '0';
+                    container.style.position = 'relative';
+                    container.style.height = '100%';
+                    container.style.display = 'flex';
+                    container.style.flexDirection = 'column';
+                    container.style.justifyContent = 'center';
+                }
+            })
+            .catch(err => console.error("First Blood Solves Failed:", err));
 
-            // Daily Top Solver Fetch
-            fetch('/api/stats/daily-top-solver')
-                .then(res => res.json())
-                .then(data => {
-                    const el = document.getElementById('daily-top-solver');
-                    if (data.username) {
-                        el.innerHTML = `<span class="pop-highlight">${data.username}</span> (${data.count} solves)`;
-                    } else {
-                        el.innerHTML = 'No recent solves';
-                    }
-                })
-                .catch(err => console.error("Daily Top Failed:", err));
+        // Daily Top Solver Fetch
+        fetch('/api/stats/daily-top-solver')
+            .then(res => res.json())
+            .then(data => {
+                const el = document.getElementById('daily-top-solver');
+                if (data.username) {
+                    el.innerHTML = `<span class="pop-highlight">${data.username}</span> (${data.count} solves)`;
+                } else {
+                    el.innerHTML = 'No recent solves';
+                }
+            })
+            .catch(err => console.error("Daily Top Failed:", err));
 
-            function renderPage() {
-                const start = (currentPage - 1) * itemsPerPage;
-                const end = start + itemsPerPage;
-                const pageData = allUsers.slice(start, end);
+        function renderPage() {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = allUsers.slice(start, end);
 
-                const midPoint = Math.ceil(pageData.length / 2);
-                const leftData = pageData.slice(0, midPoint);
-                const rightData = pageData.slice(midPoint);
+            const midPoint = Math.ceil(pageData.length / 2);
+            const leftData = pageData.slice(0, midPoint);
+            const rightData = pageData.slice(midPoint);
 
-                renderTable(document.querySelector('#table-left tbody'), leftData, start);
-                renderTable(document.querySelector('#table-right tbody'), rightData, start + midPoint);
+            renderTable(document.querySelector('#table-left tbody'), leftData, start);
+            renderTable(document.querySelector('#table-right tbody'), rightData, start + midPoint);
 
-                // Update Controls
-                document.getElementById('page-indicator').textContent = `PAGE ${currentPage} / ${Math.ceil(allUsers.length / itemsPerPage) || 1}`;
-                document.getElementById('btn-prev').disabled = currentPage === 1;
-                document.getElementById('btn-next').disabled = end >= allUsers.length;
-            }
+            // Update Controls
+            document.getElementById('page-indicator').textContent = `PAGE ${currentPage} / ${Math.ceil(allUsers.length / itemsPerPage) || 1}`;
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = end >= allUsers.length;
+        }
 
-            function renderTable(tbody, data, startIndex) {
-                tbody.innerHTML = '';
-                data.forEach((user, index) => {
-                    const rank = startIndex + index + 1;
-                    const tr = document.createElement('tr');
+        function renderTable(tbody, data, startIndex) {
+            tbody.innerHTML = '';
+            data.forEach((user, index) => {
+                const rank = startIndex + index + 1;
+                const tr = document.createElement('tr');
 
-                    // Status Bar Logic
-                    const percent = Math.min((user.score / 2000) * 100, 100); // 2000pts as "full bar" roughly
-                    const barColor = rank <= 3 ? 'var(--accent-color)' : 'var(--success-color)';
-                    const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                // Status Bar Logic
+                const percent = Math.min((user.score / 2000) * 100, 100); // 2000pts as "full bar" roughly
+                const barColor = rank <= 3 ? 'var(--accent-color)' : 'var(--success-color)';
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
 
-                    tr.innerHTML = `
+                tr.innerHTML = `
                     <td class="${rankClass}">${rank}</td>
                     <td>
                         <a href="/user/${user.id}" style="text-decoration: none; color: inherit; display: block; width: 100%;" 
@@ -320,16 +318,16 @@
                         </div>
                     </td>
                 `;
-                    tbody.appendChild(tr);
-                });
+                tbody.appendChild(tr);
+            });
 
-                // Fill empty rows to maintain layout if needed? No, let height adjust.
-            }
+            // Fill empty rows to maintain layout if needed? No, let height adjust.
+        }
 
-            function changePage(delta) {
-                currentPage += delta;
-                renderPage();
-            }
-        </script>
+        function changePage(delta) {
+            currentPage += delta;
+            renderPage();
+        }
+    </script>
 
-        <%- include('partials/footer') %>
+    <%- include('partials/footer') %>
