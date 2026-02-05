@@ -140,6 +140,33 @@ router.get('/recent', (req, res) => {
     });
 });
 
+
+
+// Daily Top Solver
+router.get('/stats/daily-top-solver', (req, res) => {
+    // Current date at 12:01 AM
+    // distinct from just 'start of day' to match request logic if strictly needed, 
+    // but 'start of day' is 00:00:00. 
+    // SQLite: date('now', 'localtime') returns string YYYY-MM-DD.
+    // We want records where timestamp > YYYY-MM-DD 00:00:01
+
+    const sql = `
+        SELECT u.username, COUNT(s.id) as count
+        FROM submissions s
+        JOIN users u ON s.user_id = u.id
+        WHERE s.timestamp >= datetime('now', 'start of day', '+1 minute')
+        AND u.username != 'admin'
+        GROUP BY u.username
+        ORDER BY count DESC
+        LIMIT 1
+    `;
+
+    db.get(sql, [], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(row || {}); // Return empty object if no solves
+    });
+});
+
 // Cumulative Stats for Graph
 router.get('/stats', (req, res) => {
     // 1. Get Base Scores (Legacy)
