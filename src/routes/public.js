@@ -10,6 +10,17 @@ router.get('/stats', (req, res) => {
     res.render('stats', { user: req.session });
 });
 
+router.get('/unsolved', (req, res) => {
+    // Select flags that are NOT in the submissions table
+    db.all('SELECT * FROM flags WHERE id NOT IN (SELECT flag_id FROM submissions)', [], (err, rows) => {
+        if (err) return res.status(500).send('Database error');
+        res.render('unsolved', {
+            user: req.session,
+            flags: rows
+        });
+    });
+});
+
 router.get('/user/:id', (req, res) => {
     const userId = req.params.id;
 

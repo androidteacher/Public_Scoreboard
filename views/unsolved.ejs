@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range Scoreboard - Unsolved Flags</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <%- include('partials/header') %>
+
+        <div class="container">
+            <div class="card glow-card" style="text-align: center; border-color: var(--danger-color);">
+                <h2 style="color: var(--danger-color);">FIRST BLOOD BOUNTY</h2>
+                <p style="font-size: 1.2rem;">All flags listed below have <span
+                        style="color: var(--danger-color); font-weight: bold;">0 solves</span>.</p>
+                <p>Be the first to solve any of them and receive an instant <strong
+                        style="color: var(--accent-color);">+200 POINT BONUS</strong>!</p>
+            </div>
+
+            <div class="card">
+                <h2>Unsolved Flags</h2>
+                <% if (flags.length===0) { %>
+                    <p style="text-align: center; color: #888;">All flags have been solved! Amazing work!</p>
+                    <% } else { %>
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left;">Challenge Name</th>
+                                    <th style="text-align: right;">Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% flags.forEach(flag=> { %>
+                                    <tr>
+                                        <td style="color: var(--danger-color); font-weight: bold;">
+                                            <%= flag.name %>
+                                        </td>
+                                        <td style="text-align: right; font-family: var(--font-mono);">
+                                            <%= flag.points %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+                        <% } %>
+            </div>
+        </div>
+</body>
+
+</html>

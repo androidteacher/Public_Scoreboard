@@ -114,6 +114,60 @@ nav .btn-glow:hover {
     box-shadow: 0 0 10px var(--accent-glow);
 }
 
+nav .nav-highlight {
+    color: var(--accent-color) !important;
+    border: 1px solid var(--accent-color);
+    background: rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 8px var(--accent-glow);
+    font-weight: 700;
+}
+
+nav .nav-highlight:hover {
+    box-shadow: 0 0 15px var(--accent-glow);
+    background: rgba(0, 243, 255, 0.2);
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    /* Aligns dropdown to the right edge of button */
+    background-color: #0f0f0f;
+    min-width: 180px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.8);
+    border: 1px solid #333;
+    z-index: 1000;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.dropdown-content a {
+    color: #ccc;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    border: none;
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.dropdown-content a:hover {
+    background-color: #1a1a1a;
+    color: var(--accent-color);
+    border: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 /* Layout */
 .container {
     max-width: 1400px;
