@@ -7,9 +7,10 @@
             <h2 class="glitch" data-text="iCSI Cyber Range Leaderboard" style="border: none; margin: 0; padding: 0;">
                 iCSI Cyber Range Leaderboard</h2>
             <div style="text-align: right; font-family: var(--font-mono); color: #888;">
-                <span style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8em; margin-right: 10px;">Most
+                <span id="stats-label"
+                    style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8em; margin-right: 10px; transition: opacity 0.5s;">Most
                     Solves Today:</span>
-                <span id="daily-top-solver" style="color: #666;">--</span>
+                <span id="stats-value" style="color: #666; transition: opacity 0.5s;">--</span>
             </div>
         </div>
 
@@ -275,18 +276,53 @@
             })
             .catch(err => console.error("First Blood Solves Failed:", err));
 
-        // Daily Top Solver Fetch
-        fetch('/api/stats/daily-top-solver')
+        // Rotating Top Solvers (Daily, Weekly, Monthly)
+        fetch('/api/stats/top-solvers')
             .then(res => res.json())
             .then(data => {
-                const el = document.getElementById('daily-top-solver');
-                if (data.username) {
-                    el.innerHTML = `<span class="pop-highlight">${data.username}</span> (${data.count} solves)`;
-                } else {
-                    el.innerHTML = 'No recent solves';
+                const labelEl = document.getElementById('stats-label');
+                const valueEl = document.getElementById('stats-value');
+
+                const stats = [
+                    { label: "Most Solves Today:", value: data.daily },
+                    { label: "Most Solves This Week:", value: data.weekly },
+                    { label: "Most Solves This Month:", value: data.monthly }
+                ];
+
+                let currentIndex = 0;
+
+                function updateDisplay() {
+                    // Fade Out
+                    labelEl.style.opacity = 0;
+                    valueEl.style.opacity = 0;
+
+                    setTimeout(() => {
+                        // Update Content
+                        const stat = stats[currentIndex];
+                        labelEl.textContent = stat.label;
+
+                        if (stat.value.username !== 'None') {
+                            valueEl.innerHTML = `<span class="pop-highlight">${stat.value.username}</span> (${stat.value.count} solves)`;
+                        } else {
+                            valueEl.innerHTML = 'No recent solves';
+                        }
+
+                        // Fade In
+                        labelEl.style.opacity = 1;
+                        valueEl.style.opacity = 1;
+
+                        // Increment Index
+                        currentIndex = (currentIndex + 1) % stats.length;
+                    }, 500); // Wait for fade out
                 }
+
+                // Initial Call
+                updateDisplay();
+
+                // Rotate every 4 seconds
+                setInterval(updateDisplay, 4000);
             })
-            .catch(err => console.error("Daily Top Failed:", err));
+            .catch(err => console.error("Top Solvers Failed:", err));
 
         function renderPage() {
             const start = (currentPage - 1) * itemsPerPage;
