@@ -379,4 +379,51 @@ router.post('/backup/import', upload.single('backupFile'), (req, res) => {
     });
 });
 
+// Default admin credentials, matching the migration bootstrap (scripts/migrate.js).
+// Resetting the admin password back to 'admin' re-triggers the default-credentials
+// warning banner on the login page until it is changed again.
+const bcrypt = require('bcrypt');
+const DEFAULT_ADMIN_USER = 'admin';
+const DEFAULT_ADMIN_PASS = 'admin';
+
+// Delete every user and re-create a fresh 'admin'/'admin' account.
+// Runs within the caller's serialized transaction (statements are queued before COMMIT).
+function resetAdminAccount() {
+    const adminHash = bcrypt.hashSync(DEFAULT_ADMIN_PASS, 10);
+    db.run('DELETE FROM users');
+    db.run("INSERT INTO users (username, password_hash, role) VALUES (?, ?, 'admin')",
+        [DEFAULT_ADMIN_USER, adminHash]);
+}
+
+// Danger Zone: Delete all users and scores, but KEEP flags.
+// Restores the default admin/admin login (and its warning banner) until the password is changed.
+router.post('/backup/wipe-scores', (req, res) => {
+    db.serialize(() => {
+        db.run('BEGIN TRANSACTION');
+        db.run('DELETE FROM submissions');
+        db.run('DELETE FROM bonus_points');
+        resetAdminAccount();
+        db.run('COMMIT', (err) => {
+            if (err) return res.status(500).send('Transaction Commit Error: ' + err.message);
+            res.send('<script>alert("All users and scores deleted. Flags preserved. The admin account has been reset to admin/admin."); window.location.href="/admin/backup";</script>');
+        });
+    });
+});
+
+// Danger Zone: Delete ALL scoreboard data including flags and users.
+// Restores the default admin/admin login (and its warning banner) until the password is changed.
+router.post('/backup/wipe-all', (req, res) => {
+    db.serialize(() => {
+        db.run('BEGIN TRANSACTION');
+        db.run('DELETE FROM submissions');
+        db.run('DELETE FROM bonus_points');
+        resetAdminAccount();
+        db.run('DELETE FROM flags');
+        db.run('COMMIT', (err) => {
+            if (err) return res.status(500).send('Transaction Commit Error: ' + err.message);
+            res.send('<script>alert("All scoreboard data deleted, including flags and users. The admin account has been reset to admin/admin."); window.location.href="/admin/backup";</script>');
+        });
+    });
+});
+
 module.exports = router;

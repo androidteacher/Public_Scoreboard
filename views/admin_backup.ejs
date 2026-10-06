@@ -40,4 +40,43 @@
         </div>
     </div>
 
+    <!-- Danger Zone: Destructive data deletion -->
+    <div class="card glow-card" style="border: 1px solid var(--danger-color);">
+        <h2 style="color: var(--danger-color);"><span class="icon">⚠️</span> Danger Zone</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            These actions permanently delete data from the live database and cannot be undone.
+            <br>
+            <span style="color: var(--danger-color);">Export a backup first if you might need this data again.</span>
+            The <strong>admin</strong> account is always preserved so you are not locked out.
+        </p>
+
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+            <!-- Delete users & scores, keep flags -->
+            <div
+                style="flex: 1; min-width: 300px; border: 1px solid var(--danger-color); padding: 2rem; border-radius: 4px; background: rgba(255, 0, 60, 0.05);">
+                <h3 style="color: var(--danger-color);">Delete Users &amp; Scores</h3>
+                <p>Delete all users and scores, but keep all flags. All programmed flags remain available to be captured.</p>
+                <form action="/admin/backup/wipe-scores" method="POST"
+                    onsubmit="return confirm('WARNING: This will DELETE ALL users, submissions, and bonus points. Flags will be kept. The admin account is preserved. Are you absolutely sure?');">
+                    <button type="submit" style="background: var(--danger-color); color: white; width: 100%; margin-top: 1rem;">
+                        Delete all users and scores, but keep all flags
+                    </button>
+                </form>
+            </div>
+
+            <!-- Delete everything including flags -->
+            <div
+                style="flex: 1; min-width: 300px; border: 1px solid var(--danger-color); padding: 2rem; border-radius: 4px; background: rgba(255, 0, 60, 0.05);">
+                <h3 style="color: var(--danger-color);">Delete Everything</h3>
+                <p>Delete all scoreboard data including flags and users. This resets the board to an empty state.</p>
+                <form action="/admin/backup/wipe-all" method="POST"
+                    onsubmit="return confirm('CRITICAL WARNING: This will DELETE ALL flags, users, submissions, and bonus points. The admin account is preserved. This cannot be undone. Are you absolutely sure?');">
+                    <button type="submit" style="background: var(--danger-color); color: white; width: 100%; margin-top: 1rem;">
+                        Delete all scoreboard data including flags and users
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <%- include('partials/footer') %>
