@@ -6,7 +6,8 @@ const router = express.Router();
 // Public Scoreboard Data
 router.get('/scoreboard', (req, res) => {
     const sql = `
-        SELECT u.id, u.username, COALESCE(SUM(t.points), 0) as score
+        SELECT u.id, u.username, COALESCE(SUM(t.points), 0) as score,
+            (SELECT COUNT(*) FROM submissions s WHERE s.user_id = u.id) as solves
         FROM users u
         LEFT JOIN (
             SELECT user_id, points_awarded as points FROM submissions

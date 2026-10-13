@@ -69,6 +69,47 @@ nav {
     gap: 1rem;
 }
 
+/* Hamburger toggle (hidden on desktop) */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 36px;
+    padding: 6px 8px;
+    background: transparent;
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.menu-toggle:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.menu-toggle-bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-color);
+    transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.menu-toggle.is-active .menu-toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.menu-toggle.is-active .menu-toggle-bar:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.is-active .menu-toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
 nav a {
     color: #888;
     text-decoration: none;
@@ -324,6 +365,27 @@ td {
     font-weight: bold;
 }
 
+/* Top 3 scores: make them really pop with a pulsing glow.
+   Glow uses currentColor so it matches the score color (green for the top 10). */
+.score-top3 {
+    font-weight: 900;
+    font-size: 1.05rem;
+    letter-spacing: 0.03em;
+    animation: scoreGlow 1.8s ease-in-out infinite;
+}
+
+@keyframes scoreGlow {
+
+    0%,
+    100% {
+        text-shadow: 0 0 6px currentColor;
+    }
+
+    50% {
+        text-shadow: 0 0 16px currentColor, 0 0 28px currentColor;
+    }
+}
+
 tr:hover td {
     background: #151515;
     color: #fff;
@@ -372,6 +434,77 @@ tr:hover td {
 @media (max-width: 900px) {
     .leaderboard-grid {
         grid-template-columns: 1fr;
+    }
+
+    /* Collapse the top menu into a hamburger */
+    header {
+        padding: 0.5rem 1rem;
+        flex-wrap: wrap;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+        padding: 0.5rem 1rem 1rem;
+        background-color: rgba(5, 5, 5, 0.98);
+        border-bottom: 1px solid #333;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
+        z-index: 99;
+    }
+
+    nav.nav-open {
+        display: flex;
+    }
+
+    nav a {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 0.8rem;
+        font-size: 0.85rem;
+        margin-left: 0 !important;
+    }
+
+    /* Dropdowns become tap-to-expand, inline accordions */
+    .dropdown {
+        width: 100%;
+    }
+
+    .dropdown-content {
+        position: static;
+        right: auto;
+        display: none;
+        min-width: 0;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background-color: rgba(0, 0, 0, 0.35);
+    }
+
+    .dropdown-content a {
+        padding-left: 1.75rem;
+    }
+
+    /* Disable hover-open on touch widths; use the .open class instead */
+    .dropdown:hover .dropdown-content {
+        display: none;
+    }
+
+    .dropdown.open .dropdown-content {
+        display: block;
     }
 }
 
