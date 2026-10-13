@@ -1,5 +1,6 @@
 <%- include('partials/header') %>
 
+    <!-- Nice work, operator. You found the source. EasterEgg14: Flag-1227b635733ad8a665e877e174fbc3e8 -->
     <div class="card glow-card crt" style="position: relative; overflow: hidden; min-height: 80vh;">
 
         <div
@@ -31,7 +32,7 @@
                                     <th style="width: 50px;">#</th>
                                     <th>Operator</th>
                                     <th style="width: 80px;">Score</th>
-                                    <th>Status</th>
+                                    <th style="width: 90px;">Solves</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -46,7 +47,7 @@
                                     <th style="width: 50px;">#</th>
                                     <th>Operator</th>
                                     <th style="width: 80px;">Score</th>
-                                    <th>Status</th>
+                                    <th style="width: 90px;">Solves</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -124,46 +125,142 @@
         let currentPage = 1;
         const itemsPerPage = 60; // 30 per column
 
-        // Initial Fetch
-        fetch('/api/scoreboard')
-            .then(res => res.json())
-            .then(data => {
-                allUsers = data;
-                filteredUsers = data; // Initialize filtered list
-                renderPage();
-            })
-            .catch(err => console.error("Uplink Failed:", err));
+        const searchInput = document.getElementById('scoreboardSearch');
+
+        // Apply the current search box value to the full user list.
+        function applyFilter() {
+            const query = (searchInput.value || '').toLowerCase();
+            filteredUsers = query
+                ? allUsers.filter(user => user.username.toLowerCase().includes(query))
+                : allUsers;
+        }
+
+        // Fetch scoreboard data and re-render, preserving the active search + page.
+        function loadScoreboard() {
+            return fetch('/api/scoreboard')
+                .then(res => res.json())
+                .then(data => {
+                    allUsers = data;
+                    applyFilter();
+                    // Clamp current page in case the filtered list shrank.
+                    const maxPage = Math.max(1, Math.ceil(filteredUsers.length / itemsPerPage));
+                    if (currentPage > maxPage) currentPage = maxPage;
+                    renderPage();
+                })
+                .catch(err => console.error("Uplink Failed:", err));
+        }
 
         // Search Logic
-        document.getElementById('scoreboardSearch').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            filteredUsers = allUsers.filter(user => user.username.toLowerCase().includes(query));
+        searchInput.addEventListener('input', () => {
+            applyFilter();
             currentPage = 1; // Reset to first page
             renderPage();
         });
 
-        // Ticker Fetch
-        fetch('/api/recent')
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('ticker-content');
-                const empty = document.getElementById('ticker-empty');
+        // Initial load + auto-refresh so scores and solve counts stay live.
+        loadScoreboard();
+        setInterval(loadScoreboard, 15000);
 
-                if (data.length === 0) {
+        // Reusable vertical scroller that re-polls the database at the end of
+        // each loop, so the displayed data stays live without a page refresh.
+        function createAutoScroller(opts) {
+            const container = opts.container;
+            const empty = opts.empty;
+            const viewHeight = opts.viewHeight;
+            const RETRY_MS = 15000; // re-check interval when there's nothing to scroll
+
+            let trackHeight = 0;
+            let currentTop = viewHeight;
+            let reloading = false;
+            let fits = false;
+            let retryTimer = null;
+
+            function scheduleRetry() {
+                if (retryTimer) clearTimeout(retryTimer);
+                retryTimer = setTimeout(() => { retryTimer = null; load(); }, RETRY_MS);
+            }
+
+            function render(data) {
+                if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
+                container.innerHTML = '';
+
+                if (!data || data.length === 0) {
                     empty.style.display = 'block';
+                    trackHeight = 0;
+                    fits = false;
+                    container.style.position = 'absolute';
+                    container.style.display = 'block';
+                    container.style.height = 'auto';
+                    container.style.top = viewHeight + 'px';
+                    scheduleRetry(); // keep checking so the first new solve appears
                     return;
                 }
 
-                data.forEach(solve => {
-                    const el = document.createElement('div');
-                    el.style.padding = '8px';
-                    el.style.borderBottom = '1px solid #333';
-                    // SQLite returns "YYYY-MM-DD HH:MM:SS" which browsers parse as local. 
-                    // We must treat it as UTC.
-                    const utcDate = new Date(solve.timestamp.replace(' ', 'T') + 'Z');
-                    const date = utcDate.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit' });
+                empty.style.display = 'none';
+                data.forEach(item => container.appendChild(opts.buildItem(item)));
+                trackHeight = container.offsetHeight;
 
-                    el.innerHTML = `
+                if (opts.centerIfFits && trackHeight <= viewHeight) {
+                    // Not enough content to scroll: center it, refresh periodically.
+                    fits = true;
+                    container.style.position = 'relative';
+                    container.style.top = '0';
+                    container.style.height = '100%';
+                    container.style.display = 'flex';
+                    container.style.flexDirection = 'column';
+                    container.style.justifyContent = 'center';
+                    scheduleRetry();
+                } else {
+                    fits = false;
+                    container.style.position = 'absolute';
+                    container.style.display = 'block';
+                    container.style.height = 'auto';
+                    currentTop = viewHeight;
+                    container.style.top = currentTop + 'px';
+                }
+            }
+
+            function load() {
+                return fetch(opts.url)
+                    .then(res => res.json())
+                    .then(render)
+                    .catch(err => console.error(opts.errorLabel || 'Scroller Failed:', err));
+            }
+
+            function tick() {
+                if (!reloading && !fits && trackHeight > 0) {
+                    currentTop -= 0.5; // scroll speed
+                    if (currentTop < -trackHeight) {
+                        // Loop complete -> poll the DB for fresh data before repeating.
+                        reloading = true;
+                        load().then(() => { reloading = false; });
+                    } else {
+                        container.style.top = currentTop + 'px';
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+
+            load().then(() => tick());
+        }
+
+        // Recent Solves Ticker (auto-refreshing)
+        createAutoScroller({
+            url: '/api/recent',
+            container: document.getElementById('ticker-content'),
+            empty: document.getElementById('ticker-empty'),
+            viewHeight: 250,
+            centerIfFits: false,
+            errorLabel: 'Ticker Failed:',
+            buildItem: (solve) => {
+                const el = document.createElement('div');
+                el.style.padding = '8px';
+                el.style.borderBottom = '1px solid #333';
+                // SQLite returns "YYYY-MM-DD HH:MM:SS" which browsers parse as local.
+                // We must treat it as UTC.
+                const utcDate = new Date(solve.timestamp.replace(' ', 'T') + 'Z');
+                const date = utcDate.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit' });
+                el.innerHTML = `
                         <div style="color: var(--accent-color); font-size: 0.9em;"><b>${solve.username}</b></div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #bbb;">
                             <span>${solve.flag_name}</span>
@@ -171,26 +268,9 @@
                         </div>
                         <div style="font-size: 0.7em; color: #555; text-align: right;">${date}</div>
                     `;
-                    container.appendChild(el);
-                });
-
-                // Ticker Animation
-                const trackHeight = container.offsetHeight;
-                const viewHeight = 250;
-
-                let currentTop = viewHeight;
-                function tick() {
-                    currentTop -= 0.5; // Slower speed
-                    if (currentTop < -trackHeight) {
-                        currentTop = viewHeight;
-                    }
-                    container.style.top = currentTop + 'px';
-                    requestAnimationFrame(tick);
-                }
-
-                if (trackHeight > 0) tick();
-            })
-            .catch(err => console.error("Ticker Failed:", err));
+                return el;
+            }
+        });
 
         // First Blood Fetch
         fetch('/api/first-blood')
@@ -220,25 +300,19 @@
             })
             .catch(err => console.error("First Blood Failed:", err));
 
-        // First Blood Solves Scroller
-        fetch('/api/first-blood-solves')
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('fb-scroller-content');
-                const empty = document.getElementById('fb-scroller-empty');
-                const wrapper = document.getElementById('fb-scroller-container');
-
-                if (data.length === 0) {
-                    empty.style.display = 'block';
-                    return;
-                }
-
-                data.forEach(entry => {
-                    const el = document.createElement('div');
-                    el.style.padding = '8px';
-                    el.style.borderBottom = '1px solid rgba(255, 0, 85, 0.2)';
-
-                    el.innerHTML = `
+        // First Blood Solves Scroller (auto-refreshing)
+        createAutoScroller({
+            url: '/api/first-blood-solves',
+            container: document.getElementById('fb-scroller-content'),
+            empty: document.getElementById('fb-scroller-empty'),
+            viewHeight: 150,
+            centerIfFits: true,
+            errorLabel: 'First Blood Solves Failed:',
+            buildItem: (entry) => {
+                const el = document.createElement('div');
+                el.style.padding = '8px';
+                el.style.borderBottom = '1px solid rgba(255, 0, 85, 0.2)';
+                el.innerHTML = `
                         <div style="color: var(--danger-color, #ff0055); font-size: 0.9em;"><b>${entry.username}</b></div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #bbb;">
                             <span>${entry.flag_name}</span>
@@ -246,83 +320,68 @@
                         </div>
                         <div style="font-size: 0.7em; color: #ff5555; text-align: right; opacity: 0.7;">FIRST BLOOD</div>
                     `;
-                    container.appendChild(el);
-                });
+                return el;
+            }
+        });
 
-                // Vertical Scroll Logic
-                const trackHeight = container.offsetHeight;
-                const viewHeight = 150;
-                let currentTop = viewHeight;
+        // Rotating Top Solvers (Daily, Weekly, Monthly) - auto-refreshing
+        (function () {
+            const labelEl = document.getElementById('stats-label');
+            const valueEl = document.getElementById('stats-value');
 
-                if (trackHeight > viewHeight) {
-                    function tick() {
-                        currentTop -= 0.5;
-                        if (currentTop < -trackHeight) {
-                            currentTop = viewHeight;
-                        }
-                        container.style.top = currentTop + 'px';
-                        requestAnimationFrame(tick);
+            let stats = [];
+            let currentIndex = 0;
+
+            function load() {
+                return fetch('/api/stats/top-solvers')
+                    .then(res => res.json())
+                    .then(data => {
+                        stats = [
+                            { label: "Most Solves Today:", value: data.daily },
+                            { label: "Most Solves This Week:", value: data.weekly },
+                            { label: "Most Solves This Month:", value: data.monthly }
+                        ];
+                    })
+                    .catch(err => console.error("Top Solvers Failed:", err));
+            }
+
+            function updateDisplay() {
+                if (stats.length === 0) return;
+
+                // Fade Out
+                labelEl.style.opacity = 0;
+                valueEl.style.opacity = 0;
+
+                setTimeout(() => {
+                    // Update Content
+                    const stat = stats[currentIndex];
+                    labelEl.textContent = stat.label;
+
+                    if (stat.value && stat.value.username !== 'None') {
+                        valueEl.innerHTML = `<span class="pop-highlight">${stat.value.username}</span> (${stat.value.count} solves)`;
+                    } else {
+                        valueEl.innerHTML = 'No recent solves';
                     }
-                    tick();
-                } else {
-                    // Center content if it fits
-                    container.style.top = '0';
-                    container.style.position = 'relative';
-                    container.style.height = '100%';
-                    container.style.display = 'flex';
-                    container.style.flexDirection = 'column';
-                    container.style.justifyContent = 'center';
-                }
-            })
-            .catch(err => console.error("First Blood Solves Failed:", err));
 
-        // Rotating Top Solvers (Daily, Weekly, Monthly)
-        fetch('/api/stats/top-solvers')
-            .then(res => res.json())
-            .then(data => {
-                const labelEl = document.getElementById('stats-label');
-                const valueEl = document.getElementById('stats-value');
+                    // Fade In
+                    labelEl.style.opacity = 1;
+                    valueEl.style.opacity = 1;
 
-                const stats = [
-                    { label: "Most Solves Today:", value: data.daily },
-                    { label: "Most Solves This Week:", value: data.weekly },
-                    { label: "Most Solves This Month:", value: data.monthly }
-                ];
+                    // Increment Index
+                    currentIndex = (currentIndex + 1) % stats.length;
 
-                let currentIndex = 0;
+                    // Poll the DB for fresh numbers at the end of each full rotation.
+                    if (currentIndex === 0) load();
+                }, 500); // Wait for fade out
+            }
 
-                function updateDisplay() {
-                    // Fade Out
-                    labelEl.style.opacity = 0;
-                    valueEl.style.opacity = 0;
-
-                    setTimeout(() => {
-                        // Update Content
-                        const stat = stats[currentIndex];
-                        labelEl.textContent = stat.label;
-
-                        if (stat.value.username !== 'None') {
-                            valueEl.innerHTML = `<span class="pop-highlight">${stat.value.username}</span> (${stat.value.count} solves)`;
-                        } else {
-                            valueEl.innerHTML = 'No recent solves';
-                        }
-
-                        // Fade In
-                        labelEl.style.opacity = 1;
-                        valueEl.style.opacity = 1;
-
-                        // Increment Index
-                        currentIndex = (currentIndex + 1) % stats.length;
-                    }, 500); // Wait for fade out
-                }
-
+            load().then(() => {
                 // Initial Call
                 updateDisplay();
-
                 // Rotate every 4 seconds
                 setInterval(updateDisplay, 4000);
-            })
-            .catch(err => console.error("Top Solvers Failed:", err));
+            });
+        })();
 
         function renderPage() {
             const start = (currentPage - 1) * itemsPerPage;
@@ -348,26 +407,24 @@
                 const rank = startIndex + index + 1;
                 const tr = document.createElement('tr');
 
-                // Status Bar Logic
-                const percent = Math.min((user.score / 2000) * 100, 100); // 2000pts as "full bar" roughly
-                const barColor = rank <= 3 ? 'var(--accent-color)' : 'var(--success-color)';
                 const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                const solves = user.solves || 0;
+                // Score color: top 10 by score -> green, everyone else -> blue.
+                const scoreColor = rank <= 10 ? 'var(--success-color)' : 'var(--accent-color)';
+                // Top 3 scores get an extra glow to really pop.
+                const scoreClass = rank <= 3 ? 'score-val score-top3' : 'score-val';
 
                 tr.innerHTML = `
                     <td class="${rankClass}">${rank}</td>
                     <td>
-                        <a href="/user/${user.id}" style="text-decoration: none; color: inherit; display: block; width: 100%;" 
-                           onmouseover="this.style.color='var(--accent-color)'" 
+                        <a href="/user/${user.id}" style="text-decoration: none; color: inherit; display: block; width: 100%;"
+                           onmouseover="this.style.color='var(--accent-color)'"
                            onmouseout="this.style.color='inherit'">
                             ${user.username}
                         </a>
                     </td>
-                    <td class="score-val">${user.score}</td>
-                    <td style="vertical-align: middle;">
-                        <div style="background: #111; height: 4px; width: 100%; border-radius: 2px; overflow: hidden; border: 1px solid #333;">
-                            <div style="background: ${barColor}; height: 100%; width: ${percent}%; box-shadow: 0 0 5px ${barColor};"></div>
-                        </div>
-                    </td>
+                    <td class="${scoreClass}" style="color: ${scoreColor};">${user.score}</td>
+                    <td style="font-family: var(--font-mono); color: #bbb; white-space: nowrap;">${solves} solve${solves === 1 ? '' : 's'}</td>
                 `;
                 tbody.appendChild(tr);
             });

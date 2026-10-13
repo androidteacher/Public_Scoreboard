@@ -17,7 +17,13 @@
 <body>
     <header>
         <div class="brand">CYBER RANGE <span style="color:var(--text-primary)">//</span> SCOREBOARD</div>
-        <nav>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false"
+            aria-controls="mainNav">
+            <span class="menu-toggle-bar"></span>
+            <span class="menu-toggle-bar"></span>
+            <span class="menu-toggle-bar"></span>
+        </button>
+        <nav id="mainNav">
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle">Scoreboard/Flags &#9662;</a>
                 <div class="dropdown-content">
@@ -49,6 +55,54 @@
                                     style="margin-left: 15px;">CyberLessons101</a>
         </nav>
     </header>
+
+    <script>
+        // Mobile hamburger navigation
+        (function () {
+            const toggle = document.getElementById('menuToggle');
+            const nav = document.getElementById('mainNav');
+            if (!toggle || !nav) return;
+
+            const mobile = () => window.matchMedia('(max-width: 900px)').matches;
+
+            toggle.addEventListener('click', function () {
+                const open = nav.classList.toggle('nav-open');
+                toggle.classList.toggle('is-active', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+
+            // On mobile, make the hover dropdowns tap-to-expand
+            nav.querySelectorAll('.dropdown-toggle').forEach(function (el) {
+                el.addEventListener('click', function (e) {
+                    if (!mobile()) return;
+                    e.preventDefault();
+                    el.parentElement.classList.toggle('open');
+                });
+            });
+
+            // Close the menu after tapping an actual navigation link
+            nav.querySelectorAll('a:not(.dropdown-toggle)').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    if (!mobile()) return;
+                    nav.classList.remove('nav-open');
+                    toggle.classList.remove('is-active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            // Reset to a clean state when returning to desktop width
+            window.addEventListener('resize', function () {
+                if (!mobile()) {
+                    nav.classList.remove('nav-open');
+                    toggle.classList.remove('is-active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    nav.querySelectorAll('.dropdown.open').forEach(function (d) {
+                        d.classList.remove('open');
+                    });
+                }
+            });
+        })();
+    </script>
 
     <!-- Email Modal -->
     <div id="emailModal" class="modal"
