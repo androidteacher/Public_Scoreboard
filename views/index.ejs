@@ -306,7 +306,7 @@
             container: document.getElementById('fb-scroller-content'),
             empty: document.getElementById('fb-scroller-empty'),
             viewHeight: 150,
-            centerIfFits: true,
+            centerIfFits: false, // always scroll, even with a single solve
             errorLabel: 'First Blood Solves Failed:',
             buildItem: (entry) => {
                 const el = document.createElement('div');
