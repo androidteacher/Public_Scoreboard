@@ -5,6 +5,47 @@ const router = express.Router();
 
 router.use(isAdmin); // Protect all routes
 
+// --- Timezone helpers for date-range filtering ---
+// Submission timestamps are stored in UTC (SQLite CURRENT_TIMESTAMP). Admins pick
+// dates in Central time, so we convert a Central calendar day to the matching UTC
+// instant (DST-aware via Intl) before comparing against stored UTC timestamps.
+const EXPORT_TZ = 'America/Chicago';
+
+// Offset in minutes (local - UTC) that `timeZone` had at the given instant.
+function tzOffsetMinutes(timeZone, date) {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+        timeZone, hour12: false,
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const p = {};
+    for (const part of dtf.formatToParts(date)) p[part.type] = part.value;
+    const hour = p.hour === '24' ? 0 : Number(p.hour);
+    const asUTC = Date.UTC(Number(p.year), Number(p.month) - 1, Number(p.day), hour, Number(p.minute), Number(p.second));
+    return (asUTC - date.getTime()) / 60000;
+}
+
+// Convert 'YYYY-MM-DD' (interpreted as a Central day) to a SQLite-format UTC string
+// 'YYYY-MM-DD HH:MM:SS'. endOfDay=false -> 00:00:00 Central; true -> 23:59:59 Central.
+function centralDayToSqliteUTC(dateStr, endOfDay) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const hh = endOfDay ? 23 : 0, mm = endOfDay ? 59 : 0, ss = endOfDay ? 59 : 0;
+    const wall = Date.UTC(y, m - 1, d, hh, mm, ss);
+    const offset = tzOffsetMinutes(EXPORT_TZ, new Date(wall));
+    const utc = new Date(wall - offset * 60000);
+    return utc.toISOString().slice(0, 19).replace('T', ' ');
+}
+
+// Today's date as 'YYYY-MM-DD' in Central time, and N days before it.
+function centralDateStr(daysAgo = 0) {
+    const d = new Date(Date.now() - daysAgo * 86400000);
+    return new Intl.DateTimeFormat('en-CA', {
+        timeZone: EXPORT_TZ, year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(d); // en-CA yields YYYY-MM-DD
+}
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 router.get('/dashboard', (req, res) => {
     res.render('admin_dashboard');
 });
@@ -205,15 +246,23 @@ router.get('/flags/solvers/:flagId', (req, res) => {
 router.get('/flags/export_gradebook/:flagId', (req, res) => {
     const { flagId } = req.params;
 
+    // Date range (Central-time calendar days, inclusive). Default: last 63 days through today.
+    const startStr = DATE_RE.test(req.query.start) ? req.query.start : centralDateStr(63);
+    const endStr = DATE_RE.test(req.query.end) ? req.query.end : centralDateStr(0);
+    const startUTC = centralDayToSqliteUTC(startStr, false); // 00:00:00 Central
+    const endUTC = centralDayToSqliteUTC(endStr, true);      // 23:59:59 Central
+
     const sql = `
         SELECT u.email
         FROM users u
         JOIN submissions s ON u.id = s.user_id
         WHERE s.flag_id = ?
         AND u.email LIKE '%@stu.neisd.net'
+        AND s.timestamp >= ?
+        AND s.timestamp <= ?
     `;
 
-    db.all(sql, [flagId], (err, rows) => {
+    db.all(sql, [flagId, startUTC, endUTC], (err, rows) => {
         if (err) return res.status(500).send(err.message);
 
         let csvContent = '';
@@ -225,7 +274,8 @@ router.get('/flags/export_gradebook/:flagId', (req, res) => {
 
         // Fetch flag name for filename
         db.get('SELECT name FROM flags WHERE id = ?', [flagId], (err, flag) => {
-            const filename = flag ? `gradebook-${flag.name.replace(/[^a-z0-9]/gi, '_')}.csv` : 'gradebook.csv';
+            const base = flag ? `gradebook-${flag.name.replace(/[^a-z0-9]/gi, '_')}` : 'gradebook';
+            const filename = `${base}-${startStr}_to_${endStr}.csv`;
             res.setHeader('Content-Type', 'text/csv');
             res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
             res.send(csvContent);

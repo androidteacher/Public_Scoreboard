@@ -74,10 +74,20 @@
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <h3 style="margin: 0;">Solvers</h3>
-                        <button type="button" onclick="exportGradebook()" class="btn"
-                            style="background: var(--accent-color); color: #000; font-size: 0.9em;">
-                            Export Gradebook (.csv)
-                        </button>
+                        <div style="display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap;">
+                            <div style="display: flex; flex-direction: column; font-size: 0.75em; color: #aaa;">
+                                <label for="gbStartDate">From</label>
+                                <input type="date" id="gbStartDate" style="font-size: 0.95em;">
+                            </div>
+                            <div style="display: flex; flex-direction: column; font-size: 0.75em; color: #aaa;">
+                                <label for="gbEndDate">To</label>
+                                <input type="date" id="gbEndDate" style="font-size: 0.95em;">
+                            </div>
+                            <button type="button" onclick="exportGradebook()" class="btn"
+                                style="background: var(--accent-color); color: #000; font-size: 0.9em;">
+                                Export Gradebook (.csv)
+                            </button>
+                        </div>
                     </div>
                     <div style="background: #111; border: 1px solid #333; padding: 10px; border-radius: 4px;">
                         <table style="width: 100%; border-collapse: collapse; color: #ccc;">
@@ -239,12 +249,33 @@
             selectFlag(null);
         }
 
+        // Returns YYYY-MM-DD for `now` in America/Chicago, offset by daysAgo.
+        function centralDateStr(daysAgo) {
+            const d = new Date(Date.now() - (daysAgo || 0) * 86400000);
+            return new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit'
+            }).format(d);
+        }
+
+        function initGradebookDates() {
+            const start = document.getElementById('gbStartDate');
+            const end = document.getElementById('gbEndDate');
+            if (start && !start.value) start.value = centralDateStr(63); // 9 weeks prior
+            if (end && !end.value) end.value = centralDateStr(0);        // today
+        }
+
         function exportGradebook() {
             const id = document.getElementById('flagId').value;
             if (!id) return;
-            window.location.href = `/admin/flags/export_gradebook/${id}`;
+            const start = document.getElementById('gbStartDate').value;
+            const end = document.getElementById('gbEndDate').value;
+            if (!start || !end) { alert('Please choose both a start and end date.'); return; }
+            if (start > end) { alert('Start date must be on or before the end date.'); return; }
+            const qs = `?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`;
+            window.location.href = `/admin/flags/export_gradebook/${id}${qs}`;
         }
 
+        initGradebookDates();
         loadFlags();
     </script>
 
