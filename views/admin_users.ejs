@@ -81,7 +81,17 @@
 
                 <div id="flagSection"
                     style="display: none; border-top: 1px solid #333; margin-top: 2rem; padding-top: 1rem;">
-                    <h4>Flag Status Management</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+                        <h4 style="margin: 0;">Flag Status Management</h4>
+                        <div style="display: flex; gap: 4px;">
+                            <button type="button" id="flagFilterAll" onclick="setFlagFilter('all')" class="btn"
+                                style="font-size: 0.8em; padding: 4px 10px;">All</button>
+                            <button type="button" id="flagFilterSolved" onclick="setFlagFilter('solved')" class="btn"
+                                style="font-size: 0.8em; padding: 4px 10px;">Solved</button>
+                            <button type="button" id="flagFilterUnsolved" onclick="setFlagFilter('unsolved')" class="btn"
+                                style="font-size: 0.8em; padding: 4px 10px;">Unsolved</button>
+                        </div>
+                    </div>
                     <div id="userFlagList" style="max-height: 300px; overflow-y: auto;">
                         <!-- Populated by JS -->
                     </div>
@@ -234,11 +244,43 @@
         }
 
         // --- Flag Management Logic ---
+        let currentFlagUserId = null;
+        let currentUserFlags = [];
+        let flagFilter = 'all'; // 'all' | 'solved' | 'unsolved'
+
+        function setFlagFilter(mode) {
+            flagFilter = mode;
+            ['all', 'solved', 'unsolved'].forEach(m => {
+                const b = document.getElementById('flagFilter' + m.charAt(0).toUpperCase() + m.slice(1));
+                if (b) {
+                    b.style.background = (m === mode) ? 'var(--accent-color)' : '';
+                    b.style.color = (m === mode) ? '#000' : '';
+                }
+            });
+            renderUserFlags();
+        }
+
         async function loadUserFlags(userId) {
+            currentFlagUserId = userId;
             const res = await fetch(`/admin/users/flags/${userId}`);
-            const flags = await res.json();
+            currentUserFlags = await res.json();
+            renderUserFlags();
+        }
+
+        function renderUserFlags() {
             const list = document.getElementById('userFlagList');
             list.innerHTML = '';
+
+            const flags = currentUserFlags.filter(f => {
+                if (flagFilter === 'solved') return !!f.submission_id;
+                if (flagFilter === 'unsolved') return !f.submission_id;
+                return true;
+            });
+
+            if (flags.length === 0) {
+                list.innerHTML = '<p style="color:#666; font-size:0.9em;">No flags match this filter.</p>';
+                return;
+            }
 
             flags.forEach(f => {
                 const isSolved = !!f.submission_id;
@@ -365,6 +407,7 @@
         }
 
         loadUsers();
+        setFlagFilter('all'); // default filter + highlight
     </script>
 
     <%- include('partials/footer') %>
