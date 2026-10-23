@@ -12,7 +12,7 @@ router.get('/stats', (req, res) => {
 
 router.get('/unsolved', (req, res) => {
     // Select flags that are NOT in the submissions table
-    db.all('SELECT * FROM flags WHERE id NOT IN (SELECT flag_id FROM submissions)', [], (err, rows) => {
+    db.all('SELECT id, name, points, category FROM flags WHERE id NOT IN (SELECT flag_id FROM submissions)', [], (err, rows) => {
         if (err) return res.status(500).send('Database error');
         res.render('unsolved', {
             user: req.session,
@@ -29,7 +29,7 @@ router.get('/user/:id', (req, res) => {
         if (err || !profileUser) return res.redirect('/');
 
         // Get All Flags
-        db.all('SELECT * FROM flags', [], (err, allFlags) => {
+        db.all('SELECT id, name, points, category FROM flags', [], (err, allFlags) => {
             if (err) return res.status(500).send('Database error');
 
             // Get User Submissions

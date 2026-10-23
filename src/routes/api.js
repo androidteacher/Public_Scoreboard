@@ -116,7 +116,7 @@ router.get('/user/solved', isAuthenticated, (req, res) => {
 router.get('/user/unsolved', isAuthenticated, (req, res) => {
     const userId = req.session.userId;
     db.all(`
-        SELECT * FROM flags 
+        SELECT id, name, points, category FROM flags 
         WHERE id NOT IN (SELECT flag_id FROM submissions WHERE user_id = ?)
     `, [userId], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
