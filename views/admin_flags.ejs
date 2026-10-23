@@ -109,6 +109,16 @@
     </div>
 
     <script>
+        // Escape user-controlled strings before inserting into innerHTML (prevents stored XSS).
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         let flags = [];
 
         function loadFlags() {
@@ -194,8 +204,8 @@
                         const tr = document.createElement('tr');
                         tr.style.borderBottom = '1px solid #222';
                         tr.innerHTML = `
-                            <td style="padding: 8px;">${u.username}</td>
-                            <td style="padding: 8px; color: #888;">${email}</td>
+                            <td style="padding: 8px;">${escapeHtml(u.username)}</td>
+                            <td style="padding: 8px; color: #888;">${escapeHtml(email)}</td>
                             <td style="padding: 8px; font-size: 0.9em; color: #666;">${date}</td>
                         `;
                         tbody.appendChild(tr);

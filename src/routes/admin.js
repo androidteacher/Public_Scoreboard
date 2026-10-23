@@ -86,8 +86,15 @@ router.post('/users/delete', (req, res) => {
 
 // Consolidated User Save (Insert or Update)
 router.post('/users/save', async (req, res) => {
-    const { id, username, email, password, role } = req.body;
+    let { id, username, email, password, role } = req.body;
     const bcrypt = require('bcrypt');
+
+    // Username Validation (defense-in-depth against stored XSS / malformed names)
+    username = (username || '').trim();
+    const USERNAME_RE = /^[A-Za-z0-9_.\- ]{1,32}$/;
+    if (!USERNAME_RE.test(username)) {
+        return res.status(400).json({ error: 'Username may only contain letters, numbers, spaces, and _ . - (max 32 characters).' });
+    }
 
     // Email Validation (Optional but must be valid format if present)
     if (email && email.trim() !== '') {

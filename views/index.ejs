@@ -120,6 +120,16 @@
     </div>
 
     <script>
+        // Escape user-controlled strings before inserting into innerHTML (prevents stored XSS).
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         let allUsers = [];
         let filteredUsers = [];
         let currentPage = 1;
@@ -261,9 +271,9 @@
                 const utcDate = new Date(solve.timestamp.replace(' ', 'T') + 'Z');
                 const date = utcDate.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit' });
                 el.innerHTML = `
-                        <div style="color: var(--accent-color); font-size: 0.9em;"><b>${solve.username}</b></div>
+                        <div style="color: var(--accent-color); font-size: 0.9em;"><b>${escapeHtml(solve.username)}</b></div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #bbb;">
-                            <span>${solve.flag_name}</span>
+                            <span>${escapeHtml(solve.flag_name)}</span>
                             <span>+${solve.points_awarded}</span>
                         </div>
                         <div style="font-size: 0.7em; color: #555; text-align: right;">${date}</div>
@@ -313,9 +323,9 @@
                 el.style.padding = '8px';
                 el.style.borderBottom = '1px solid rgba(255, 0, 85, 0.2)';
                 el.innerHTML = `
-                        <div style="color: var(--danger-color, #ff0055); font-size: 0.9em;"><b>${entry.username}</b></div>
+                        <div style="color: var(--danger-color, #ff0055); font-size: 0.9em;"><b>${escapeHtml(entry.username)}</b></div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #bbb;">
-                            <span>${entry.flag_name}</span>
+                            <span>${escapeHtml(entry.flag_name)}</span>
                             <span>+${entry.points}</span>
                         </div>
                         <div style="font-size: 0.7em; color: #ff5555; text-align: right; opacity: 0.7;">FIRST BLOOD</div>
@@ -358,7 +368,7 @@
                     labelEl.textContent = stat.label;
 
                     if (stat.value && stat.value.username !== 'None') {
-                        valueEl.innerHTML = `<span class="pop-highlight">${stat.value.username}</span> (${stat.value.count} solves)`;
+                        valueEl.innerHTML = `<span class="pop-highlight">${escapeHtml(stat.value.username)}</span> (${stat.value.count} solves)`;
                     } else {
                         valueEl.innerHTML = 'No recent solves';
                     }
@@ -420,7 +430,7 @@
                         <a href="/user/${user.id}" style="text-decoration: none; color: inherit; display: block; width: 100%;"
                            onmouseover="this.style.color='var(--accent-color)'"
                            onmouseout="this.style.color='inherit'">
-                            ${user.username}
+                            ${escapeHtml(user.username)}
                         </a>
                     </td>
                     <td class="${scoreClass}" style="color: ${scoreColor};">${user.score}</td>

@@ -61,6 +61,28 @@ function migrate() {
     db.serialize(() => {
         initSchema();
 
+        // 0. Preferred path: seed from a curated snapshot (flag_submit/flags_seed.json).
+        // This is an export of the authoritative scoreboard container (flags only, no user
+        // data). It preserves exact flag names/values/points/categories and round-trips
+        // through the app's import/export, so the baked image starts in the curated state.
+        // If the snapshot is absent, fall back to the legacy answers.php + yellow import below.
+        const seedPath = path.join(__dirname, '../flag_submit/flags_seed.json');
+        if (fs.existsSync(seedPath)) {
+            const seedFlags = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+            console.log(`Seeding ${seedFlags.length} flags from flags_seed.json (curated snapshot).`);
+            const stmtSeed = db.prepare("INSERT OR IGNORE INTO flags (name, value, points, category, description) VALUES (?, ?, ?, ?, ?)");
+            seedFlags.forEach(flag => {
+                stmtSeed.run(flag.name, flag.value, flag.points, flag.category, flag.description != null ? flag.description : null, function (err) {
+                    if (err) console.error(err);
+                });
+            });
+            stmtSeed.finalize(() => {
+                console.log("Flags seeded from snapshot. Skipping legacy answers.php/yellow import.");
+                createAdmin();
+            });
+            return;
+        }
+
         // 1. Parse answers.php for Flags
         const answersContent = fs.readFileSync(answersPath, 'utf8');
 

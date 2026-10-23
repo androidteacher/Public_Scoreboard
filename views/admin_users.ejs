@@ -101,6 +101,16 @@
     </div>
 
     <script>
+        // Escape user-controlled strings before inserting into innerHTML (prevents stored XSS).
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         let users = [];
 
         function loadUsers() {
@@ -134,7 +144,7 @@
                 // Highlight admin
                 const roleBadge = user.role === 'admin' ? '<span style="color:var(--accent-color); font-size:0.8em;">ADMIN</span>' : '';
 
-                div.innerHTML = `<span>${user.username}</span> ${roleBadge}`;
+                div.innerHTML = `<span>${escapeHtml(user.username)}</span> ${roleBadge}`;
                 div.onclick = () => selectUser(user);
                 list.appendChild(div);
             });

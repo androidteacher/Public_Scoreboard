@@ -80,7 +80,15 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    const { username, password } = req.body;
+    const { password } = req.body;
+
+    // Username Validation (defense-in-depth against stored XSS / malformed names)
+    const username = (req.body.username || '').trim();
+    const USERNAME_RE = /^[A-Za-z0-9_.\- ]{1,32}$/;
+    if (!USERNAME_RE.test(username)) {
+        return res.render('register', { error: 'Username may only contain letters, numbers, spaces, and _ . - (max 32 characters).' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Check if user exists

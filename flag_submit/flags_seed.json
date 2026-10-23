@@ -1,0 +1,1437 @@
+[
+  {
+    "name": "Flag_1",
+    "value": "FLAG-LFIEASY",
+    "points": 50,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_2",
+    "value": "Flag-RFIHTML",
+    "points": 100,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_3",
+    "value": "Flag-RFIEVILSMB",
+    "points": 250,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_4",
+    "value": "Flag-NotifyM3",
+    "points": 170,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_5",
+    "value": "Flag-SQL777",
+    "points": 200,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_6",
+    "value": "Flag-3scape",
+    "points": 250,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_7",
+    "value": "Flag-PharZip",
+    "points": 170,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_8",
+    "value": "Flag-GitCommit999",
+    "points": 120,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_9",
+    "value": "Flag-CookieBrute9",
+    "points": 120,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_A",
+    "value": "Flag-NO-NTLM",
+    "points": 130,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_B",
+    "value": "Flag-EasyPop",
+    "points": 150,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_C",
+    "value": "Flag-RogerYoung",
+    "points": 70,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_D",
+    "value": "Flag-ModCgiShell",
+    "points": 300,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Flag_E",
+    "value": "FLAG-Tunn3l",
+    "points": 125,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_F",
+    "value": "FLAG-ZONEXFR",
+    "points": 120,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_G",
+    "value": "FLAG-Py64",
+    "points": 115,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_H",
+    "value": "Flag_Brut3SSH",
+    "points": 110,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_J",
+    "value": "Flag-SSTI",
+    "points": 120,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Flag_K",
+    "value": "Flag-Base64Pop",
+    "points": 110,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_L",
+    "value": "Flag-Burp123",
+    "points": 110,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_M",
+    "value": "Flag-MS10-17",
+    "points": 115,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_N",
+    "value": "Flag-MIMEtype",
+    "points": 115,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Flag_O",
+    "value": "Flag-inject1",
+    "points": 110,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_P",
+    "value": "FLag-PhPD3S",
+    "points": 115,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_Q",
+    "value": "Flag-SSRF127",
+    "points": 115,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_R",
+    "value": "Flag-msfcustom",
+    "points": 125,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_S",
+    "value": "Flag-HazUrData",
+    "points": 500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_T",
+    "value": "Flag-KungFuStrong",
+    "points": 140,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_U",
+    "value": "Flag-YouGotCred",
+    "points": 120,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_W",
+    "value": "Flag-WPVULN",
+    "points": 155,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Flag_Y",
+    "value": "Flag-PreAuth",
+    "points": 135,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red1",
+    "value": "Flag-UserAg3nt",
+    "points": 115,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red2",
+    "value": "Flag-AdminCookie",
+    "points": 110,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red3",
+    "value": "Flag-Brut3Force",
+    "points": 110,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red4",
+    "value": "gatorade3",
+    "points": 220,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red5",
+    "value": "Flag-3sceL8",
+    "points": 180,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red6",
+    "value": "Flag-PAM-Deny-Red6-Success",
+    "points": 115,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red7",
+    "value": "Flag-BackStr33tBoyz",
+    "points": 150,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red8",
+    "value": "017databaseaku",
+    "points": 150,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red9",
+    "value": "Flag-CVE2018-19422Su3brion",
+    "points": 100,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red12",
+    "value": "Flag-RemoteDB123",
+    "points": 175,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red13",
+    "value": "Flag-3ScapeMe451",
+    "points": 125,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red14",
+    "value": "FLAG-Tunn3lShock9",
+    "points": 90,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red15",
+    "value": "Flag-C3ntr4lP3rk",
+    "points": 90,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red16",
+    "value": "FLAG-KRBSECURENTI23",
+    "points": 90,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red17",
+    "value": "Flag-B00MStick",
+    "points": 100,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red18",
+    "value": "FLAG-QUERY-GRAPHIX",
+    "points": 75,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red19",
+    "value": "FLAG-P3ARF3Ction",
+    "points": 75,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red20",
+    "value": "Flag-Tim3out",
+    "points": 75,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red21",
+    "value": "Flag-Simpl3CVE",
+    "points": 30,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red22",
+    "value": "FLAG-OktaHack23",
+    "points": 50,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red23",
+    "value": "FLAG-IceIceBaby",
+    "points": 50,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red24",
+    "value": "Flag-JWTS3cret",
+    "points": 50,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red25",
+    "value": "Flag-403ByPAZZ",
+    "points": 90,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red26",
+    "value": "Flag-CookieThief",
+    "points": 100,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red27",
+    "value": "Flag-CORSCoMpLete",
+    "points": 150,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red28",
+    "value": "Flag-Sym2Zip971",
+    "points": 100,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red29",
+    "value": "Flag-Advanc3dSQL5",
+    "points": 150,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red30",
+    "value": "Flag-LigoloFTW2024",
+    "points": 125,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red31",
+    "value": "Flag-J3nkinsLFI",
+    "points": 250,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red32",
+    "value": "Flag-YouAr3InClud3d2",
+    "points": 500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red33",
+    "value": "Flag-FstenY0urSetbelt",
+    "points": 2000,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red34",
+    "value": "Flag-AceAbus3Ftw",
+    "points": 1500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red35",
+    "value": "Flag-NTLMTH13F",
+    "points": 300,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red36",
+    "value": "Flag-G3TAR0UndR0undR0uND",
+    "points": 300,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red37",
+    "value": "Flag-D0ubleP1votFTW",
+    "points": 700,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red38",
+    "value": "Flag-InTh3C0mments",
+    "points": 800,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red39",
+    "value": "Flag-Fr0ntEndVal1dat3",
+    "points": 350,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red40",
+    "value": "Flag-XX3FuZZ3r",
+    "points": 300,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red41",
+    "value": "Flag-M1m1k8tzCrack",
+    "points": 300,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red42",
+    "value": "Flag-P3Rs3V3r3",
+    "points": 600,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red43",
+    "value": "Flag-Te3MC1t332024",
+    "points": 500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red44",
+    "value": "Flag-J1ggyJuggl3r",
+    "points": 700,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red45",
+    "value": "Flag-R0undcub3Lf1",
+    "points": 500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red46",
+    "value": "Flag-DNSH3r02024",
+    "points": 300,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red47",
+    "value": "Flag-Log4Shell-RCE-Success",
+    "points": 1500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red48",
+    "value": "Flag-SQL0utF1le",
+    "points": 1000,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red49",
+    "value": "Flag-ID0rF0unD55",
+    "points": 750,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red50",
+    "value": "Flag-Cr0ssF1reHurr1can3",
+    "points": 2500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red51",
+    "value": "Flag-7xH9vQkX23z2LgT",
+    "points": 1200,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red52",
+    "value": "flag-xY7z9QpL2sVw",
+    "points": 1500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red53",
+    "value": "Flag-Red53WikiXSS",
+    "points": 1200,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red54",
+    "value": "Flag-C3ar4alH3ck24",
+    "points": 1000,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red55",
+    "value": "Flag-cab347a6e674b882c33a8ebc334201c3",
+    "points": 1400,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red56",
+    "value": "Flag-9df60cfbc825ff3dd61d2c77ad0f2a57",
+    "points": 1000,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red57",
+    "value": "Flag-NextMiddlewearBypass2025",
+    "points": 2500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red58",
+    "value": "Flag-cfe7ef35aa68052ce715d89af833df2b",
+    "points": 2000,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red59",
+    "value": "Flag-CtfD4Tw#4",
+    "points": 1500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red60",
+    "value": "flag-9f3cA7dE2bKqM8VxW4Jr0HnP",
+    "points": 500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Arena1",
+    "value": "Flag-Are3NaChamp",
+    "points": 300,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Arena2",
+    "value": "Arena2-MassAssignMe123",
+    "points": 200,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Arena3",
+    "value": "Arena3_SUP3RFast4Sure",
+    "points": 700,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Arena4",
+    "value": "Flag-c00lCat",
+    "points": 2500,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Arena5",
+    "value": "Flag-XX3Lf1FtW",
+    "points": 1200,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg1",
+    "value": "Flag-iCSI-SYSVOL",
+    "points": 50,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg2",
+    "value": "Flag-biNwAlk2",
+    "points": 45,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg3",
+    "value": "Flag-SpaceKitty",
+    "points": 30,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg4",
+    "value": "Flag-ElnaemeDnFgoaritam",
+    "points": 50,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg5",
+    "value": "Flag-Interc3ptM3",
+    "points": 40,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg6",
+    "value": "Flag-SimpleSt3g",
+    "points": 20,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg7",
+    "value": "Flag-Triple3ncode",
+    "points": 40,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg8",
+    "value": "Flag-Not3Pad4Sle",
+    "points": 150,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg9",
+    "value": "Flag-Adm1nF0und",
+    "points": 400,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg10",
+    "value": "Flag-3ast3r3gg1064",
+    "points": 250,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg11",
+    "value": "flag-3ggHUnt3r2024",
+    "points": 75,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg12",
+    "value": "Flag-IAmARobot",
+    "points": 50,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "EasterEgg13",
+    "value": "Flag-gNagk5M3LZBg",
+    "points": 75,
+    "category": null,
+    "description": null
+  },
+  {
+    "name": "Red62",
+    "value": "CTF{CVE-2026-24061-R00T-SHELL}",
+    "points": 250,
+    "category": "Telnet CVE",
+    "description": null
+  },
+  {
+    "name": "Red63",
+    "value": "Flag-1d645bb338b55adb4c13e39fdce5470",
+    "points": 250,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red64",
+    "value": "Flag-120aa10fbb4f66d2e70552da52413907",
+    "points": 200,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red65",
+    "value": "Flag-0827f7148e0585f698b5ec52b2ecf58d",
+    "points": 150,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red66",
+    "value": "Flag-RefM4ster99",
+    "points": 100,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red67",
+    "value": "Flag-2fa6fb8328a6ff1b7cd309d959ff52b7",
+    "points": 100,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red68",
+    "value": "Flag-89ab3f290d23",
+    "points": 1500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red69",
+    "value": "flag-c7c73d0b04087ee8078002a3463ae399",
+    "points": 500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red70",
+    "value": "flag-arbyci",
+    "points": 500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Yellow-1",
+    "value": "Flag-1e75a9868fea2c13ce2d3e44475ce40a",
+    "points": 200,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red71",
+    "value": "Flag-639ffa875f7c503f13c6ed1dc05b4766",
+    "points": 500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red72",
+    "value": "Flag-T0mmyB0y",
+    "points": 300,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red73",
+    "value": "Flag-React55182ftw",
+    "points": 1200,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Red74",
+    "value": "Flag-Pr3ttyC00lR1ght?",
+    "points": 600,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Green-1",
+    "value": "Flag-42d3869dee605e951f494c1f29c5a86b",
+    "points": 500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Green-2",
+    "value": "Flag-e799cf786288b3df87e4dc01863f12cb",
+    "points": 700,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Green-3",
+    "value": "Flag-7c45fd6ee02e0ed0dc357e10cbf06e9",
+    "points": 500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Yellow-2",
+    "value": "flag-xfg5432d",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-3",
+    "value": "V1T{DUCK_S0S_S0S}",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-4",
+    "value": "Flag-55UW45Ol5gtmsVb7SsKOpQ25XmjnHEM23s6r6wGVTP3l4yRX2ngz6gCU3Ctf9BXI",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-5",
+    "value": "Flag-a7b2c9d8e5f1",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-6",
+    "value": "Flag-OOB_XXE_is_fun_and_dangerous_ab986rtyui",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-7",
+    "value": "Flag-efe79e88b323751e0e79a815f8fa52de",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-8",
+    "value": "Flag-3Xtr3m3S3cur1tyV4ult99",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-9",
+    "value": "flag-abc123gjasdf",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-10",
+    "value": "flag-f4a86080a62ef0acb41bf77d8b1db",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-11",
+    "value": "Flag-e34ca171a3fd525c54d96554f5fc6480",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-12",
+    "value": "Flag-Fb7P0xKs1LjZ8GrN4TyM2Wd",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-13",
+    "value": "Flag-e86b28b55eaf8feb03e24730be892314",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-14",
+    "value": "Flag-4fded1464736e77865df232cbcb4cd19",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-15",
+    "value": "flag-b94371419226bcc83b8b222991900fe3",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-16",
+    "value": "Flag-2177cf716308d0554d647cc4268d9520",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-17",
+    "value": "Flag-e8dd36a5e4086e63e105442262deea91",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-18",
+    "value": "Flag-90bf1a523233fa70564369d087796bed",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-19",
+    "value": "Flag-674f3def787399af6e8148d5c09ec115",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-20",
+    "value": "Flag-0f5afa285cb7d34ee6fa41b23bd51e61",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-21",
+    "value": "Flag-539ab55f594726c4b96f18218747e9b8",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-22",
+    "value": "Flag-c5201cb729626bd2b82badd336b2d50a",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-23",
+    "value": "Flag-539ba82ee01539c1acec243c3f3dec5b",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-24",
+    "value": "Flag-271aa96786811b41f00c2e1c5856875f",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-25",
+    "value": "Flag-009e04f96048c9b8ed9e0007127da602",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-26",
+    "value": "Flag-9a791cc5219f6f4d627591113ae747db",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-27",
+    "value": "Flag-6a05544e9a24a4ac8df40f5e124100eb",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-28",
+    "value": "Flag-aded50fab245d316d78092a7de95032c",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-29",
+    "value": "Flag-4de94612bf2ccd249998932ac860a5d5",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-30",
+    "value": "Flag-6265b22b66502d70d5f004f08238ac3c",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-31",
+    "value": "Flag-37daef8b5359d0ca3753776ecb18604b",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-32",
+    "value": "Flag-fa0564e7bb055202e5e6bcff8457baf3",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-33",
+    "value": "63483310",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-34",
+    "value": "Flag-ff84486362e63a91cb147921997f30f5",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-35",
+    "value": "Flag-c00k1e_0v3rfl0w_m4st3r",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-36",
+    "value": "Flag-8kL5xP2vR9tQ6mW1jD7nZ4yB3pC8sY2vF6xT1mJ9qR7wL3",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-37",
+    "value": "FLAG-K3P9Qw2Z6Y7R8Nx5La4Tf",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-38",
+    "value": "Flag-6c38480930e955572c2073056fe69040",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-39",
+    "value": "Flag-magic-method-master-2024",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-40",
+    "value": "Flag-ff7345a22bc3605271ba122677d31cae",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-41",
+    "value": "Flag-d3aa8db4087c615f578f288cb10dc6d4",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-42",
+    "value": "Flag-8be21d5d223bd03c696e0d43b3bf5d94",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-43",
+    "value": "FLAG-K3P9Qw2Z6Y7R8Nx5La4Tf",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-44",
+    "value": "Flag-4310d1f5886ebeb94b9f1860be7f9733",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-45",
+    "value": "Flag-prototype-chassis-8849",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-46",
+    "value": "Flag-57fea45adb1239bceeadeef34",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-47",
+    "value": "Flag-1e75a9868fea2c13ce2d3",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-48",
+    "value": "Flag-f023ef905c43196e1640efd7a2019c7bA",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-49",
+    "value": "Flag-21eb8dc2babd4f6db0b3bef1923d7398",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-50",
+    "value": "Flag-1b2deaf459a9c9b2831abcdef567181",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-51",
+    "value": "Flag-8b7f5772aae78f34d15d9d1d352874d3",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-52",
+    "value": "Flag-c8013ed40a8a2b4515658d61931c6e94",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-53",
+    "value": "Flag-2458cf79031033d1493ea275bab09568",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-54",
+    "value": "Flag-f5e00e6b68bd978f24abdd4d59777dfb",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-55",
+    "value": "Flag-23840ec8b248ba96553ab3fc3f96d47b",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-56",
+    "value": "Flag-a8498dfef4ae6736e564488b896185580",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-57",
+    "value": "Flag-9826adc38d861b90a2228fa6840d5baf",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-58",
+    "value": "Flag-2eea7886c88ba25761d4db3d9940a30d",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-59",
+    "value": "Flag-4be7770400e33104c629bd569b80820c",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-60",
+    "value": "Flag-42d3869dee605e951f494c1f29c5a86b",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-61",
+    "value": "Flag-bcf175779bcf7d1e7ccf504ba0335c1d",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-62",
+    "value": "Flag-ff734215cdb78d0f433afda22590b8a2",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-63",
+    "value": "Flag-76248099c07b2f47f5ca502ebcf645df",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-64",
+    "value": "Flag-c8f92b77e3b5a15383f94c1f29c5a86b",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-65",
+    "value": "Flag-61da20711b16fd11c29d20eca7763ee3",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-66",
+    "value": "Flag-972bc46f9b7f2c616ad18b6ea5e80837",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-67",
+    "value": "Flag-e637e18d2c8557686480cd656bdcf6a2",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-68",
+    "value": "Flag-c9c67583b63c907e80c4a9ff79ede765",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-69",
+    "value": "Flag-22ae960d6753b7e17a315a820fa68a54",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-70",
+    "value": "Flag-4cfe545b6d97b9a03405deac48ba6589",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-71",
+    "value": "Flag-7a56970cd5914782ab48c13383592830",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-72",
+    "value": "Flag-abcdef1234554321cde563adsce",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Yellow-73",
+    "value": "Flag-6db3f053b6a5bffd6886fbabe67726be",
+    "points": 200,
+    "category": "Yellow",
+    "description": null
+  },
+  {
+    "name": "Green-4",
+    "value": "Flag-SUIDChallengeC0mplete",
+    "points": 350,
+    "category": "Linux",
+    "description": null
+  },
+  {
+    "name": "John-1",
+    "value": "Flag-e0bad8bc32fa12c4d7f48e31ef4b7b85",
+    "points": 150,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "John-2",
+    "value": "Flag-e1a07d4ec788fa639011a161241e577c",
+    "points": 200,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "John-3",
+    "value": "Flag-01df4a9622bf744fe41b04fc9e719f53",
+    "points": 250,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Green-5",
+    "value": "Flag-GPGENCR3PT",
+    "points": 350,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Green-6",
+    "value": "Flag-b875552fb8e0c26fcf52863ccfde9d62",
+    "points": 1200,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "EasterEgg14",
+    "value": "Flag-1227b635733ad8a665e877e174fbc3e8",
+    "points": 500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Green-7",
+    "value": "Flag-dba206dfef9b8f71436ab22766dc609c",
+    "points": 500,
+    "category": "",
+    "description": null
+  },
+  {
+    "name": "Green-8",
+    "value": "flag-809147cea0593bcc465f4f936c155c69",
+    "points": 250,
+    "category": "",
+    "description": null
+  }
+]
