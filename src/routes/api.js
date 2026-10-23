@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../database');
 const { isAuthenticated } = require('../middleware/auth');
+const { rateLimitByUser } = require('../middleware/rateLimit');
 const router = express.Router();
 
 // Public Scoreboard Data
@@ -48,7 +49,10 @@ router.get('/first-blood-solves', (req, res) => {
 });
 
 // Flag Submission
-router.post('/submit', isAuthenticated, (req, res) => {
+// Brute-force protection: max 10 flag submissions per user per minute
+const submitLimiter = rateLimitByUser({ windowMs: 60 * 1000, max: 10 });
+
+router.post('/submit', isAuthenticated, submitLimiter, (req, res) => {
     const { flagValue } = req.body;
     const userId = req.session.userId;
 
